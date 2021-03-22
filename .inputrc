@@ -1,0 +1,19 @@
+ # vi to be the default editor for readline
+set editing-mode vi
+
+# vi settings
+$if mode=vi
+# normal mode
+  set keymap vi-command
+  "gg": beginning-of-history
+  "h": backward-char
+  "l": forward-char
+  "G": end-of-history
+  "~~": capitalize-word
+  # insert mode
+  set keymap vi-insert
+  "jk": vi-movement-mode
+  "\e[A": history-search-backward
+  "\e[B": history-search-forward
+$endif
+
