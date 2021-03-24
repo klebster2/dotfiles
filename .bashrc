@@ -1,5 +1,3 @@
-# klebster2's bashrc
-
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -15,7 +13,7 @@ esac
 HISTCONTROL=ignoreboth
 
 # append to the history file, don't overwrite it
-shopt -s histappend
+shopt -s histappend;
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=1000
@@ -27,7 +25,9 @@ shopt -s checkwinsize
 
 # If set, the pattern "**" used in a pathname expansion context will
 # match all files and zero or more directories and subdirectories.
-#shopt -s globstar
+shopt -s autocd 2> /dev/null;
+shopt -s globstar 2> /dev/null;
+shopt -s nocaseglob 2> /dev/null;
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
@@ -94,6 +94,8 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
+alias dsksp="du -hS | sort -n -r | more"
+
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
@@ -119,3 +121,23 @@ if ! shopt -oq posix; then
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+bi() {
+    bind -f ~/.inputrc
+}
+
+zombies()
+{
+    # find zombie prcs - `killall $(zombies | tr '\n' ' ')` kills all zombies
+    for pid in $(ps axo pid=,stat= | awk '$2~/^Z/ { print $1 }') ; do
+        echo "$pid"
+    done
+}
+
+sum_time() {
+    xargs soxi -D | awk '{SUM+=$1} END {printf"%d:%d:%d\n", SUM/3600, SUM%3600/60, SUM%60}'
+}
+
+hms2s() {
+    awk -F: '{ print ($1 * 3600) + ($2 * 60) + $3 }'
+}

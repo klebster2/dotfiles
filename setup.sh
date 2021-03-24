@@ -1,4 +1,7 @@
 #!/bin/bash
-ln -sv "~/.dotfiles/.bashrc" ~
-ln -sv "~/.dotfiles/.inputrc" ~
-ln -sv "~/.dotfiles/.tmux.conf" ~
+
+ln -s ~/.dotfiles/.bashrc ~
+ln -s ~/.dotfiles/.inputrc ~
+ln -s ~/.dotfiles/.tmux.conf ~
+
+tmux source-file ~/.tmux.conf
