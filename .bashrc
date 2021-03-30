@@ -16,8 +16,30 @@ HISTCONTROL=ignoreboth
 shopt -s histappend;
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
+#HISTSIZE=1000
+#HISTFILESIZE=2000
+
+# For setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+
+# Eternal bash history.
+# ---------------------
+# Undocumented feature which sets the size to "unlimited".
+# http://stackoverflow.com/questions/9457233/unlimited-bash-history
+export HISTFILESIZE=
+export HISTSIZE=
+export HISTTIMEFORMAT="[%F %T] "
+
+# Change the file location because certain bash sessions truncate .bash_history file upon close.
+# http://superuser.com/questions/575479/bash-history-truncated-to-500-lines-on-each-login
+export HISTFILE=~/.bash_eternal_history
+
+# Force prompt to write history after every command.
+# http://superuser.com/questions/20900/bash-history-loss
+PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+
+# activate colors
+export TERM=xterm-256color
+
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -94,7 +116,12 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
+<<<<<<< HEAD
 alias dsksp="du -hS | sort -n -r | more"
+=======
+
+alias diskspace="du -S | sort -n -r |more"
+>>>>>>> b63e935c202a8f0bb3b23381273a2eb3a32a8248
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -119,6 +146,13 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+zombies()
+{
+    for pid in $(ps axo pid=,stat= | awk '$2~/^Z/ { print $1 }') ; do
+        echo "$pid"
+    done
+}
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
