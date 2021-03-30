@@ -116,12 +116,8 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
-<<<<<<< HEAD
-alias dsksp="du -hS | sort -n -r | more"
-=======
 
 alias diskspace="du -S | sort -n -r |more"
->>>>>>> b63e935c202a8f0bb3b23381273a2eb3a32a8248
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
