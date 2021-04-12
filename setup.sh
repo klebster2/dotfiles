@@ -19,11 +19,10 @@ if_exists_bak() {
         return 0
     elif [[ -L "${1}" ]]; then
         # symlink case
-        echo "Symlink ${1} -> $(readlink -f $1) already exists"
+        echo "Symlink '${1}' -> '$(readlink -f $1)' already exists"
         return 1
     else
-        # no file $1 found
-        printf "no file ${1} found"
+        printf "no file ${1} found\nAdding ${1}...\n"
         return 0
     fi
 }
