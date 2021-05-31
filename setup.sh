@@ -39,7 +39,7 @@ if_exists_bak "$HOME/.inputrc" && ln -sv "$HOME/.dotfiles/.inputrc" "$HOME/.inpu
 if_exists_bak "$HOME/.tmux.conf" && ln -sv "$HOME/.dotfiles/.tmux.conf" "$HOME/.tmux.conf"
 
 while true; do
-    read -p "Do you wish to install klebster2's vimrc ? [Yy]/[Nn]" yn
+    read -p "Do you wish to install klebster2's vimrc ? [Y/n]" yn
     case $yn in
         [Yy]* ) install_vimrc; break;;
         [Nn]* ) exit;;
