@@ -188,3 +188,12 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+docker_rm_stop() {
+    docker stop $1
+    docker rm $1
+}
+
+venv() {
+    [ -d "$(dirname -- $1)" ] &&
+    python3 -m venv $1
+}
