@@ -143,12 +143,6 @@ if ! shopt -oq posix; then
   fi
 fi
 
-zombies()
-{
-    for pid in $(ps axo pid=,stat= | awk '$2~/^Z/ { print $1 }') ; do
-        echo "$pid"
-    done
-}
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
@@ -197,3 +191,11 @@ venv() {
     [ -d "$(dirname -- $1)" ] &&
     python3 -m venv $1
 }
+
+export PATH="${HOME}/.local/bin:${PATH}"
+
+if type rg &> /dev/null; then
+    export FZF_DEFAULT_COMMAND='rg --files'
+    export FZF_DEFAULT_OPTS='-m --height 50% --border'
+fi
+
