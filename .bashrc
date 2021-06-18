@@ -146,7 +146,8 @@ fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-bi() {
+# Functions without args.
+bindrc() {
     bind -f ~/.inputrc
 }
 
@@ -166,6 +167,37 @@ hms2s() {
     awk -F: '{ print ($1 * 3600) + ($2 * 60) + $3 }'
 }
 
+findbashrcfunctions() {
+    # meta function
+    grep -P "^(function )?[a-zA-Z]\w+\(\) {" "${HOME}/.bashrc" | sed -r 's/\(\).*$//g'
+}
+
+# Functions with args.
+docker_rm_stop() {
+    docker stop $1
+    docker rm $1
+}
+
+venv() {
+    local venv_dir="$1" python_version="$2"
+    [ -d "$(dirname -- "$1")" ] && python$python_version -m venv "$1"
+}
+
+showfunc() {
+    # See https://stackoverflow.com/questions/6916856/can-bash-show-a-functions-definition#answer-6916952
+    what_is="$(type $1)"
+    if (echo "$what_is" | head -n1 | grep -q "$1 is a function"); then
+        echo "$what_is" | sed '1,3d;$d' | sed -r 's/^ {,4}//g'
+    fi
+}
+
+source_bashrc() {
+    source "$HOME/.bashrc"
+}
+
+alias ff='findbashrcfunctions'
+alias sf='showfunc'
+alias sb='source_bashrc'
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -182,15 +214,6 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-docker_rm_stop() {
-    docker stop $1
-    docker rm $1
-}
-
-venv() {
-    [ -d "$(dirname -- $1)" ] &&
-    python3 -m venv $1
-}
 
 export PATH="${HOME}/.local/bin:${PATH}"
 
@@ -198,4 +221,6 @@ if type rg &> /dev/null; then
     export FZF_DEFAULT_COMMAND='rg --files'
     export FZF_DEFAULT_OPTS='-m --height 50% --border'
 fi
+
+[ -f "$HOME/.env-vars" ] && source "$HOME/.env-vars"
 
