@@ -184,6 +184,7 @@ venv() {
 }
 
 showfunc() {
+    # Show the function definition
     # See https://stackoverflow.com/questions/6916856/can-bash-show-a-functions-definition#answer-6916952
     what_is="$(type $1)"
     if (echo "$what_is" | head -n1 | grep -q "$1 is a function"); then
@@ -195,22 +196,20 @@ source_bashrc() {
     source "$HOME/.bashrc"
 }
 
-edit_bashrc() {
-    vim "$HOME/.bashrc"
-}
-
-edit_vimrc() {
-    vim "$HOME/.vimrc"
+edit_file() {
+    vim "$1"
 }
 
 alias ff='findbashrcfunctions'
 alias sf='showfunc'
 alias sb='source_bashrc'
-alias eb='edit_bashrc'
-alias ev='edit_vimrc'
+
+alias eb="edit_file $HOME/.bashrc"
+alias et="edit_file $HOME/.tmux.conf"
+alias ev="edit_file $HOME/.vim_runtime/vimrcs/basic.vim"
 
 alias nv='nvim'
-alias nvim='vim'
+alias vim='nvim'
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -237,3 +236,10 @@ fi
 
 [ -f "$HOME/.env-vars" ] && source "$HOME/.env-vars"
 
+# https://unix.stackexchange.com/questions/40749/remove-duplicate-path-entries-with-awk-command
+export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
+
+dailylog() {
+    [ ! -e $HOME/.dailylog ] && mkdir $HOME/.dailylog
+    edit_file $HOME/.dailylog/$(date +%d_%m_%y)
+}
