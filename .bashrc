@@ -71,12 +71,12 @@ esac
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
+        # We have color support; assume it's compliant with Ecma-48
+        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+        # a case would tend to support setf rather than setaf.)
+        color_prompt=yes
     else
-	color_prompt=
+        color_prompt=
     fi
 fi
 
@@ -143,16 +143,11 @@ if ! shopt -oq posix; then
   fi
 fi
 
-zombies()
-{
-    for pid in $(ps axo pid=,stat= | awk '$2~/^Z/ { print $1 }') ; do
-        echo "$pid"
-    done
-}
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-bi() {
+# Functions without args.
+bindrc() {
     bind -f ~/.inputrc
 }
 
@@ -172,6 +167,49 @@ hms2s() {
     awk -F: '{ print ($1 * 3600) + ($2 * 60) + $3 }'
 }
 
+findbashrcfunctions() {
+    # meta function
+    grep -P "^(function )?[a-zA-Z]\w+\(\) {" "${HOME}/.bashrc" | sed -r 's/\(\).*$//g'
+}
+
+# Functions with args.
+docker_rm_stop() {
+    docker stop $1
+    docker rm $1
+}
+
+venv() {
+    local venv_dir="$1" python_version="$2"
+    [ -d "$(dirname -- "$1")" ] && python$python_version -m venv "$1"
+}
+
+showfunc() {
+    # Show the function definition
+    # See https://stackoverflow.com/questions/6916856/can-bash-show-a-functions-definition#answer-6916952
+    what_is="$(type $1)"
+    if (echo "$what_is" | head -n1 | grep -q "$1 is a function"); then
+        echo "$what_is" | sed '1,3d;$d' | sed -r 's/^ {,4}//g'
+    fi
+}
+
+source_bashrc() {
+    source "$HOME/.bashrc"
+}
+
+edit_file() {
+    vim "$1"
+}
+
+alias ff='findbashrcfunctions'
+alias sf='showfunc'
+alias sb='source_bashrc'
+
+alias eb="edit_file $HOME/.bashrc"
+alias et="edit_file $HOME/.tmux.conf"
+alias ev="edit_file $HOME/.vim_runtime/vimrcs/basic.vim"
+
+alias nv='nvim'
+alias vim='nvim'
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -188,5 +226,22 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-bind "$(bind -s | grep __FZF_SELECT | sed 's/\\C-t/\\C-x\\C-t/')"
-bind '"\C-t": transpose-chars'
+#bind "$(bind -s | grep __FZF_SELECT | sed 's/\\C-t/\\C-x\\C-t/')"
+#bind '"\C-t": transpose-chars'
+
+export PATH="${HOME}/.local/bin:${PATH}"
+
+if type rg &> /dev/null; then
+    export FZF_DEFAULT_COMMAND='rg --files'
+    export FZF_DEFAULT_OPTS='-m --height 50% --border'
+fi
+
+[ -f "$HOME/.env-vars" ] && source "$HOME/.env-vars"
+
+# https://unix.stackexchange.com/questions/40749/remove-duplicate-path-entries-with-awk-command
+export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
+
+dailylog() {
+    [ ! -e $HOME/.dailylog ] && mkdir $HOME/.dailylog
+    edit_file $HOME/.dailylog/$(date +%d_%m_%y)
+}
