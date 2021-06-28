@@ -188,3 +188,5 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+bind "$(bind -s | grep __FZF_SELECT | sed 's/\\C-t/\\C-x\\C-t/')"
+bind '"\C-t": transpose-chars'
