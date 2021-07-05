@@ -40,6 +40,8 @@ PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 # activate colors
 export TERM=xterm-256color
 
+export EDITOR="nvim"
+export VISUAL="nvim"
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -200,16 +202,46 @@ edit_file() {
     vim "$1"
 }
 
+dailylog() {
+    [ ! -e $HOME/.dailylog ] && mkdir $HOME/.dailylog
+    edit_file $HOME/.dailylog/$(date +%d_%m_%y)
+}
+
+ssh_repeat_localhost_port() {
+    # For SSH commands with tunnel redirects same server side as local side
+    # this function simply helps the user to list a number of ports faster
+    # e.g. to write
+    # ssh -L 8080:localhost:8080 -L 8081:localhost:8081 \
+    # -o ServerAliveInterval=30 k@localhost -i <ssh-keyfile> -p <port>
+    # faster, we can do:
+
+    # ssh $(localhost_repeat_port 8080 8081) ...
+    # which will replace localhost 8080 8081 with
+    # "-L 8080:localhost:8080 -L 8081:localhost:8081" 
+    _stdout=" "
+    for _port; do
+        _stdout="${_stdout}-L $_port:localhost:$_port "
+    done
+}
+
+# >>> custom shortcuts >>>
+
+# CAUTIONARY NOTE: THESE MAY INTERFERE WITH OTHER ABBREVIATED COMMANDS!
 alias ff='findbashrcfunctions'
 alias sf='showfunc'
 alias sb='source_bashrc'
+alias srp='ssh_localhost_repeat_port'
 
 alias eb="edit_file $HOME/.bashrc"
 alias et="edit_file $HOME/.tmux.conf"
 alias ev="edit_file $HOME/.vim_runtime/vimrcs/basic.vim"
+alias dl="dailylog"
+alias dT="date"
+alias dt="date +%T"
 
 alias nv='nvim'
-alias vim='nvim'
+alias vim='nvim' # run \vim to access vim, not neovim
+# <<< custom shortcuts <<<
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -226,7 +258,6 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-
 export PATH="${HOME}/.local/bin:${PATH}"
 
 if type rg &> /dev/null; then
@@ -238,8 +269,3 @@ fi
 
 # https://unix.stackexchange.com/questions/40749/remove-duplicate-path-entries-with-awk-command
 export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
-
-dailylog() {
-    [ ! -e $HOME/.dailylog ] && mkdir $HOME/.dailylog
-    edit_file $HOME/.dailylog/$(date +%d_%m_%y)
-}
