@@ -3,19 +3,40 @@ set editing-mode vi
 
 # vi settings
 $if mode=vi
-# normal mode
-  set keymap vi-command
-  "gg": beginning-of-history
-  "h": backward-char
-  "l": forward-char
-  "G": end-of-history
-  "~~": capitalize-word
-  # insert mode
-  set keymap vi-insert
-  "jk": vi-movement-mode
-  "\e[A": history-search-backward
-  "\e[B": history-search-forward
-  set show-all-if-ambiguous on
-  set completion-ignore-case on
+    # normal mode
+    set keymap vi-command
+    "gg": beginning-of-history
+    "h": backward-char
+    "l": forward-char
+    "G": end-of-history
+    "~~": capitalize-word
+    # custom commands
+    # inputrc
+    "ei": "i$EDITOR $HOME/.inputrc\r"
+    "si": "ibind -f $HOME/.inputrc\r"
+    # bash: visualize history
+    "vh": "i$EDITOR $HOME/.bash_eternal_history\r"
+    # bash: edit history - see .bashrc
+    "ebh": "iebh\r"
+    # bash source ~/.bashrc
+    "sb": "isource $HOME/.bashrc\r"
+    "eb": "i$EDITOR $HOME/.bashrc\r"
+    # tmux
+    "st": "itmux source-file $HOME/.tmux.conf\r"
+    "et": "i$EDITOR $HOME/.tmux.conf\r"
+    # vimrc
+    "ev": "i$EDITOR $HOME/.vim_runtime/vimrcs/basic.vim\r"
+    # dailylog
+    "dl": "idl\r"
+    # see ANSI control-code escape sequences corresponding to keys
+    "keys": "iinfocmp -L -1"
+    "keysx": "iinfocmp -L -1 xterm"
+    # insert mode
+    set keymap vi-insert
+    "jk": vi-movement-mode
+    "\e[A": history-search-backward
+    "\e[B": history-search-forward
+    set show-all-if-ambiguous on
+    set completion-ignore-case on
 $endif
 

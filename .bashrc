@@ -215,8 +215,8 @@ ssh_repeat_localhost_port() {
     # -o ServerAliveInterval=30 k@localhost -i <ssh-keyfile> -p <port>
     # faster, we can do:
 
-    # ssh $(localhost_repeat_port 8080 8081) ...
-    # which will replace localhost 8080 8081 with
+    # ssh "$(localhost_repeat_port 8080 8081)" or "$(srp 8080 8081)" ...
+    # which will replace the string inside "$(..)" with
     # "-L 8080:localhost:8080 -L 8081:localhost:8081" 
     _stdout=" "
     for _port; do
@@ -224,15 +224,28 @@ ssh_repeat_localhost_port() {
     done
 }
 
+edit_bash_history_file() {
+    perl -pe 'use POSIX qw(strftime); s/^#(\d+)/strftime "#%F %H:%M:%S", localtime($1)/e' $HOME/.bash_eternal_history | vim -
+}
+
+bakswp() {
+    # simple helper for common routine
+    [ -e "$1.bak2" ] && exit 0
+    cp $1{,.bak2}
+    cp $1{.bak,}
+    mv $1{.bak2,.bak}
+}
+
 # >>> custom shortcuts >>>
 
-# CAUTIONARY NOTE: THESE MAY INTERFERE WITH OTHER ABBREVIATED COMMANDS!
+# CAUTIONARY NOTE: THESE MAY INTERFERE WITH OTHER COMMANDS!
 alias ff='findbashrcfunctions'
 alias sf='showfunc'
 alias sb='source_bashrc'
 alias srp='ssh_localhost_repeat_port'
 
 alias eb="edit_file $HOME/.bashrc"
+alias ebh="edit_bash_history_file"
 alias et="edit_file $HOME/.tmux.conf"
 alias ev="edit_file $HOME/.vim_runtime/vimrcs/basic.vim"
 alias dl="dailylog"
