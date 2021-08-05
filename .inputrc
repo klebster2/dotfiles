@@ -12,22 +12,23 @@ $if mode=vi
     "~~": capitalize-word
     # custom commands
     # inputrc
-    "ei": "i$EDITOR $HOME/.inputrc\r"
-    "si": "ibind -f $HOME/.inputrc\r"
+    "ei": "i$EDITOR $HOME/.inputrc\r\e"
+    "si": "ibind -f $HOME/.inputrc\r\e"
     # bash: visualize history
-    "vh": "i$EDITOR $HOME/.bash_eternal_history\r"
+    "vh": "i$EDITOR $HOME/.bash_eternal_history\r\e"
     # bash: edit history - see .bashrc
-    "ebh": "iebh\r"
+    "ebh": "iebh\r\e"
     # bash source ~/.bashrc
-    "sb": "isource $HOME/.bashrc\r"
-    "eb": "i$EDITOR $HOME/.bashrc\r"
+    "sb": "isource $HOME/.bashrc\r\e"
+    "eb": "i$EDITOR $HOME/.bashrc\r\e"
     # tmux
-    "st": "itmux source-file $HOME/.tmux.conf\r"
-    "et": "i$EDITOR $HOME/.tmux.conf\r"
+    "st": "itmux source-file $HOME/.tmux.conf\r\e"
+    "et": "i$EDITOR $HOME/.tmux.conf\r\e"
+    "tn": "itmux new\r\e"
     # vimrc
-    "ev": "i$EDITOR $HOME/.vim_runtime/vimrcs/basic.vim\r"
+    "ev": "i$EDITOR $HOME/.vim_runtime/vimrcs/basic.vim\r\e"
     # dailylog
-    "dl": "idl\r"
+    "dl": "idl\r\e"
     # see ANSI control-code escape sequences corresponding to keys
     "keys": "iinfocmp -L -1"
     "keysx": "iinfocmp -L -1 xterm"
