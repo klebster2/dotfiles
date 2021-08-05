@@ -150,7 +150,7 @@ fi
 
 # Functions without args.
 bindrc() {
-    bind -f ~/.inputrc
+    bind -f $HOME/.inputrc
 }
 
 zombies()
@@ -239,11 +239,15 @@ bakswp() {
 # >>> custom shortcuts >>>
 
 # CAUTIONARY NOTE: THESE MAY INTERFERE WITH OTHER COMMANDS!
+# source
 alias ff='findbashrcfunctions'
 alias sf='showfunc'
 alias sb='source_bashrc'
 alias srp='ssh_localhost_repeat_port'
+alias si="bindrc $HOME/.inputrc"
 
+# edit
+alias ei="edit_file $HOME/.inputrc"
 alias eb="edit_file $HOME/.bashrc"
 alias ebh="edit_bash_history_file"
 alias et="edit_file $HOME/.tmux.conf"
@@ -281,5 +285,7 @@ fi
 
 [ -f "$HOME/.env-vars" ] && source "$HOME/.env-vars"
 
+# remove duplicate PATHs for readability
 # https://unix.stackexchange.com/questions/40749/remove-duplicate-path-entries-with-awk-command
+export PATH_NOT_UNIQ="$PATH"
 export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
