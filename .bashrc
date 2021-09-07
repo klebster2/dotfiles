@@ -229,11 +229,17 @@ edit_bash_history_file() {
 }
 
 bakswp() {
-    # simple helper for common routine
+    # simple helper for this common routine
     [ -e "$1.bak2" ] && exit 0
     cp $1{,.bak2}
     cp $1{.bak,}
     mv $1{.bak2,.bak}
+}
+
+settitle() {
+    # https://stackoverflow.com/questions/40234553/how-to-rename-a-pane-in-tmux
+    export PS1="\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\n$ "
+    echo -ne "\e]0;$1\a"
 }
 
 # >>> custom shortcuts >>>
@@ -258,7 +264,9 @@ alias dT="date"
 alias dt="date +%T"
 
 alias nv='nvim'
-alias vim='nvim' # run \vim to access vim, not neovim
+alias vim='nvim'
+# to access vim run \vim, this will not access neovim
+
 # <<< custom shortcuts <<<
 
 # >>> conda initialize >>>
