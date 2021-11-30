@@ -16,6 +16,12 @@ $if mode=vi
     "si": "ibind -f $HOME/.inputrc\r"
     # bash: visualize history
     "vh": "i$EDITOR $HOME/.bash_eternal_history\r"
+    # srp: ssh_localhost_repeat_port
+    "srp": "isrp\r"
+    # dl: dailylog
+    "dl": "idlr"
+    # bash: find bash functions
+    "ff": "iff\r"
     # bash: edit history - see .bashrc
     "ebh": "iebh\r"
     # bash source ~/.bashrc

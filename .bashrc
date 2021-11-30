@@ -219,9 +219,10 @@ ssh_repeat_localhost_port() {
     # which will replace the string inside "$(..)" with
     # "-L 8080:localhost:8080 -L 8081:localhost:8081" 
     _stdout=" "
-    for _port; do
+    for _port in $@; do
         _stdout="${_stdout}-L $_port:localhost:$_port "
     done
+    echo "$_stdout"
 }
 
 edit_bash_history_file() {
@@ -242,7 +243,8 @@ bakswp() {
 alias ff='findbashrcfunctions'
 alias sf='showfunc'
 alias sb='source_bashrc'
-alias srp='ssh_localhost_repeat_port'
+alias srp='ssh_repeat_localhost_port'
+alias st="tmux source-file $HOME/.tmux.conf"
 
 alias eb="edit_file $HOME/.bashrc"
 alias ebh="edit_bash_history_file"
@@ -258,14 +260,14 @@ alias vim='nvim' # run \vim to access vim, not neovim
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/ubuntu/miniforge3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/kleber/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/ubuntu/miniforge3/etc/profile.d/conda.sh" ]; then
-        . "/home/ubuntu/miniforge3/etc/profile.d/conda.sh"
+    if [ -f "/home/kleber/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/kleber/miniconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/home/ubuntu/miniforge3/bin:$PATH"
+        export PATH="/home/kleber/miniconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -282,3 +284,4 @@ fi
 
 # https://unix.stackexchange.com/questions/40749/remove-duplicate-path-entries-with-awk-command
 export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
+
