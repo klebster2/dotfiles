@@ -27,6 +27,7 @@ $if mode=vi
     "tn": "itmux new\r\e"
     # vimrc
     "ev": "i$EDITOR $HOME/.vim_runtime/vimrcs/basic.vim\r\e"
+    "cdv": "icd $HOME/.vim_runtime\r\e"
     # dailylog
     "dl": "idl\r\e"
     # see ANSI control-code escape sequences corresponding to keys

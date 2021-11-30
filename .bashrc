@@ -162,7 +162,8 @@ zombies()
 }
 
 sum_time() {
-    xargs soxi -D | awk '{SUM+=$1} END {printf"%d:%d:%d\n", SUM/3600, SUM%3600/60, SUM%60}'
+    xargs soxi -D \
+      | awk '{SUM+=$1} END {printf"%d:%d:%d\n", SUM/3600, SUM%3600/60, SUM%60}'
 }
 
 hms2s() {
@@ -171,7 +172,8 @@ hms2s() {
 
 findbashrcfunctions() {
     # meta function
-    grep -P "^(function )?[a-zA-Z]\w+\(\) {" "${HOME}/.bashrc" | sed -r 's/\(\).*$//g'
+    grep -P "^(function )?[a-zA-Z]\w+\(\) {" "${HOME}/.bashrc" \
+        | sed -r 's/\(\).*$//g'
 }
 
 # Functions with args.
@@ -183,6 +185,7 @@ docker_rm_stop() {
 venv() {
     local venv_dir="$1" python_version="$2"
     [ -d "$(dirname -- "$1")" ] && python$python_version -m venv "$1"
+    . "$1"/bin/activate
 }
 
 showfunc() {
@@ -225,7 +228,9 @@ ssh_repeat_localhost_port() {
 }
 
 edit_bash_history_file() {
-    perl -pe 'use POSIX qw(strftime); s/^#(\d+)/strftime "#%F %H:%M:%S", localtime($1)/e' $HOME/.bash_eternal_history | vim -
+    perl -pe \
+        'use POSIX qw(strftime); s/^#(\d+)/strftime "#%F %H:%M:%S", localtime($1)/e' \
+        $HOME/.bash_eternal_history | nvim -
 }
 
 bakswp() {
@@ -248,6 +253,9 @@ settitle() {
 # source
 alias ff='findbashrcfunctions'
 alias sf='showfunc'
+# e.g. run
+# ff
+# sf venv
 alias sb='source_bashrc'
 alias srp='ssh_localhost_repeat_port'
 alias si="bindrc $HOME/.inputrc"
@@ -258,13 +266,15 @@ alias eb="edit_file $HOME/.bashrc"
 alias ebh="edit_bash_history_file"
 alias et="edit_file $HOME/.tmux.conf"
 alias ev="edit_file $HOME/.vim_runtime/vimrcs/basic.vim"
+alias cdv="cd $HOME/.vim_runtime"
 alias si="bind -f $HOME/.inputrc"
 alias dl="dailylog"
 alias dT="date"
 alias dt="date +%T"
 
 alias nv='nvim'
-alias vim='nvim'
+alias vimdiff='nvim -d'
+alias nvd='nvim -d'
 # to access vim run \vim, this will not access neovim
 
 # <<< custom shortcuts <<<
@@ -281,10 +291,11 @@ else
         export PATH="/home/ubuntu/miniforge3/bin:$PATH"
     fi
 fi
+
 unset __conda_setup
 # <<< conda initialize <<<
 
-export PATH="${HOME}/.local/bin:${PATH}"
+export PATH="${HOME}/.local/bin:/bigdrive/kleber/environments/py3nvim/lib/python3.7:${PATH}"
 
 if type rg &> /dev/null; then
     export FZF_DEFAULT_COMMAND='rg --files'
@@ -297,3 +308,6 @@ fi
 # https://unix.stackexchange.com/questions/40749/remove-duplicate-path-entries-with-awk-command
 export PATH_NOT_UNIQ="$PATH"
 export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
+
+. "${HOME}/.env-vars"
+source "${HOME}/.dotfiles/tmux.completion.bash"

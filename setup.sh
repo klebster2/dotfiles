@@ -34,6 +34,14 @@ install_vimrc() {
     popd
 }
 
+install_tmux_completion() {
+    pushd "$HOME/.dotfiles/"
+    curl -o tmux.completion.bash \
+        "https://raw.githubusercontent.com/Bash-it/bash-it/master/completion/available/tmux.completion.bash"
+    popd
+}
+install_tmux_completion
+
 if_exists_bak "$HOME/.bashrc" && ln -sv "$HOME/.dotfiles/.bashrc" "$HOME/.bashrc"
 if_exists_bak "$HOME/.inputrc" && ln -sv "$HOME/.dotfiles/.inputrc" "$HOME/.inputrc"
 if_exists_bak "$HOME/.tmux.conf" && ln -sv "$HOME/.dotfiles/.tmux.conf" "$HOME/.tmux.conf"
