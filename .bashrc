@@ -148,7 +148,7 @@ fi
 
 # Functions without args.
 bindrc() {
-    bind -f ~/.inputrc
+    bind -f $HOME/.inputrc
 }
 
 zombies()
@@ -170,7 +170,8 @@ s2hms_v() {
 }
 
 sum_time() {
-    xargs soxi -D | awk '{SUM+=$1} END {printf"%d:%d:%d\n", SUM/3600, SUM%3600/60, SUM%60}'
+    xargs soxi -D \
+      | awk '{SUM+=$1} END {printf"%d:%d:%d\n", SUM/3600, SUM%3600/60, SUM%60}'
 }
 
 hms2s() {
@@ -179,7 +180,8 @@ hms2s() {
 
 findbashrcfunctions() {
     # meta function
-    grep -P "^(function )?[a-zA-Z]\w+\(\) {" "${HOME}/.bashrc" | sed -r 's/\(\).*$//g'
+    grep -P "^(function )?[a-zA-Z]\w+\(\) {" "${HOME}/.bashrc" \
+        | sed -r 's/\(\).*$//g'
 }
 
 # Functions with args.
@@ -221,8 +223,8 @@ ssh_repeat_localhost_port() {
     # faster, we can do:
 
     # ssh "$(localhost_repeat_port 8080 8081)" or "$(srp 8080 8081)" ...
-    # which will replace the string inside "$(..)" with
-    # "-L 8080:localhost:8080 -L 8081:localhost:8081" 
+    # which will replace the string inside "$(..)" with a space separated list
+    # e.g. "-L 8080:localhost:8080 -L 8081:localhost:8081"
     _stdout=" "
     for _port in $@; do
         _stdout="${_stdout}-L $_port:localhost:$_port "
@@ -237,7 +239,7 @@ edit_bash_history_file() {
 }
 
 bakswp() {
-    # simple helper for common routine
+    # simple helper for this common routine
     [ -e "$1.bak2" ] && exit 0
     cp $1{,.bak2}
     cp $1{.bak,}
@@ -274,29 +276,56 @@ git_config_change_user_credentials() {
     for option in user.name user.email; do
         git_config_change_user_info_option_prompt "$option"
     done
+}
 
+settitle() {
+    # https://stackoverflow.com/questions/40234553/how-to-rename-a-pane-in-tmux
+    export PS1="\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\n$ "
+    echo -ne "\e]0;$1\a"
+}
+
+find_windows_home() {
+    IFS=':' read -a fields <<<"$PATH"
+
+    for field in "${fields[@]}"; do
+            if [[ $field =~ ^(/mnt/.*)/AppData/Local/.* ]]; then
+                    echo ${BASH_REMATCH[1]}
+                    exit
+            fi
+    done
 }
 
 # >>> custom shortcuts >>>
 
-# CAUTIONARY NOTE: ALIASES MAY INTERFERE WITH OTHER COMMANDS!
+# CAUTIONARY NOTE: Aliases may interfere with other commands!
+alias fwh="find_windows_home"
 alias guc="git_config_change_user_credentials"
 alias ff='findbashrcfunctions'
 alias sf='showfunc'
+# e.g. run
+# ff
+# sf venv
 alias sb='source_bashrc'
 alias srp='ssh_repeat_localhost_port'
-alias st="tmux source-file $HOME/.tmux.conf"
+alias si="bindrc $HOME/.inputrc"
 
-alias eb="$EDITOR $HOME/.bashrc"
+# edit
+alias ei="edit_file $HOME/.inputrc"
+alias eb="edit_file $HOME/.bashrc"
 alias ebh="edit_bash_history_file"
-alias et="$EDITOR $HOME/.tmux.conf"
-alias ev="$EDITOR $HOME/.vim_runtime/vimrcs/basic.vim"
+alias et="edit_file $HOME/.tmux.conf"
+alias ev="edit_file $HOME/.vim_runtime/vimrcs/basic.vim"
+alias cdv="cd $HOME/.vim_runtime"
+alias si="bind -f $HOME/.inputrc"
 alias dl="dailylog"
 alias dT="date"
 alias dt="date +%T"
 
 alias nv='nvim'
-alias vim='nvim' # run \vim to access vim, not neovim
+alias vimdiff='nvim -d'
+alias nvd='nvim -d'
+# to access vim run \vim, this will not access neovim
+
 # <<< custom shortcuts <<<
 
 # >>> conda initialize >>>
@@ -311,10 +340,11 @@ else
         export PATH="/home/kleber/miniconda3/bin:$PATH"
     fi
 fi
+
 unset __conda_setup
 # <<< conda initialize <<<
 
-export PATH="${HOME}/.local/bin:${PATH}"
+export PATH="${HOME}/.local/bin:/bigdrive/kleber/environments/py3nvim/lib/python3.7:${PATH}"
 
 if type rg &> /dev/null; then
     export FZF_DEFAULT_COMMAND='rg --files'
@@ -323,5 +353,10 @@ fi
 
 [ -f "$HOME/.env-vars" ] && source "$HOME/.env-vars"
 
+# remove duplicate PATHs for readability
 # https://unix.stackexchange.com/questions/40749/remove-duplicate-path-entries-with-awk-command
+export PATH_NOT_UNIQ="$PATH"
 export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
+
+. "${HOME}/.env-vars"
+source "${HOME}/.dotfiles/tmux.completion.bash"
