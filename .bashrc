@@ -119,8 +119,6 @@ alias la='ls -A'
 alias l='ls -CF'
 
 
-alias diskspace="du -S | sort -n -r |more"
-
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
@@ -161,6 +159,16 @@ zombies()
     done
 }
 
+s2hms() {
+    # seconds to hours minutes seconds
+    awk '{SUM+=$1} END {printf"%d:%d:%d\n", SUM/3600, SUM%3600/60, SUM%60}'
+}
+
+s2hms_v() {
+    # seconds to hours minutes seconds (verbose version)
+    awk '{SUM+=$1}END{printf "S: %d\nH:M:S: %d:%d:%d\n",SUM,SUM/3600,SUM%3600/60,SUM%60}'
+}
+
 sum_time() {
     xargs soxi -D | awk '{SUM+=$1} END {printf"%d:%d:%d\n", SUM/3600, SUM%3600/60, SUM%60}'
 }
@@ -181,8 +189,9 @@ docker_rm_stop() {
 }
 
 venv() {
-    local venv_dir="$1" python_version="$2"
-    [ -d "$(dirname -- "$1")" ] && python$python_version -m venv "$1"
+    local python_version="$1"
+    dir="./venv"
+    [ -d "$dir" ] && python$python_version -m venv "$dir"
 }
 
 showfunc() {
@@ -198,13 +207,9 @@ source_bashrc() {
     source "$HOME/.bashrc"
 }
 
-edit_file() {
-    vim "$1"
-}
-
 dailylog() {
-    [ ! -e $HOME/.dailylog ] && mkdir $HOME/.dailylog
-    edit_file $HOME/.dailylog/$(date +%d_%m_%y)
+    [ ! -e "$HOME/.dailylog" ] && mkdir "$HOME/.dailylog"
+    "$EDITOR" "$HOME/.dailylog/$(date +%d_%m_%y)"
 }
 
 ssh_repeat_localhost_port() {
@@ -226,7 +231,9 @@ ssh_repeat_localhost_port() {
 }
 
 edit_bash_history_file() {
-    perl -pe 'use POSIX qw(strftime); s/^#(\d+)/strftime "#%F %H:%M:%S", localtime($1)/e' $HOME/.bash_eternal_history | vim -
+    perl -pe \
+        'use POSIX qw(strftime); s/^#(\d+)/strftime "#%F %H:%M:%S", localtime($1)/e' \
+        "$HOME/.bash_eternal_history" | "$EDITOR" -
 }
 
 bakswp() {
@@ -237,19 +244,53 @@ bakswp() {
     mv $1{.bak2,.bak}
 }
 
+disksp() {
+    du $@ -Sh | sort -n -r | more
+}
+
+git_change_user_info() {
+    local _option="$1"
+    read -p "option: " value
+    git config --local "$_option" "$value" && echo "successfuly changed" \
+        || echo "unsuccessful"
+}
+
+
+git_config_change_user_info_option_prompt() {
+    local _option="$1"
+    echo "git config --get ${_option}"
+    git config --get "${_option}"
+    read -p "Change ${_option} (y/n)?" y_n
+    msg="option selected"
+    case "$y_n" in
+        y|Y|Yes|yes ) echo "'${y_n}' $msg'"; git_change_user_info ${y_n};;
+        n|N|No|no ) echo "'${y_n}' $msg, skipping";;
+        * ) echo "invalid";;
+    esac
+}
+
+git_config_change_user_credentials() {
+    printf "Change name and email for current commit?\n"
+    for option in user.name user.email; do
+        git_config_change_user_info_option_prompt "$option"
+    done
+
+}
+
 # >>> custom shortcuts >>>
 
-# CAUTIONARY NOTE: THESE MAY INTERFERE WITH OTHER COMMANDS!
+# CAUTIONARY NOTE: ALIASES MAY INTERFERE WITH OTHER COMMANDS!
+alias guc="git_config_change_user_credentials"
 alias ff='findbashrcfunctions'
 alias sf='showfunc'
 alias sb='source_bashrc'
 alias srp='ssh_repeat_localhost_port'
 alias st="tmux source-file $HOME/.tmux.conf"
 
-alias eb="edit_file $HOME/.bashrc"
+alias eb="$EDITOR $HOME/.bashrc"
 alias ebh="edit_bash_history_file"
-alias et="edit_file $HOME/.tmux.conf"
-alias ev="edit_file $HOME/.vim_runtime/vimrcs/basic.vim"
+alias et="$EDITOR $HOME/.tmux.conf"
+alias ev="$EDITOR $HOME/.vim_runtime/vimrcs/basic.vim"
 alias dl="dailylog"
 alias dT="date"
 alias dt="date +%T"
@@ -284,4 +325,3 @@ fi
 
 # https://unix.stackexchange.com/questions/40749/remove-duplicate-path-entries-with-awk-command
 export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
-
