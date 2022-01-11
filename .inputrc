@@ -16,6 +16,8 @@ $if mode=vi
     "eirc": "i$EDITOR $HOME/.inputrc\r\e"
     ## source input rc
     "sirc": "ibind -f $HOME/.inputrc\r\e"
+    ## cd dotfiles
+    "cddf": "icd $HOME/.dotfiles\r\e"
     # dl: dailylog
     "dl": "idl\r\e"
     # bash: find bash functions
@@ -27,8 +29,8 @@ $if mode=vi
     # edit base rc file '~/.bashrc'
     "ebrc": "i$EDITOR $HOME/.bashrc\r\e"
     # tmux
-    "st": "itmux source-file $HOME/.tmux.conf\r\e"
-    "et": "i$EDITOR $HOME/.tmux.conf\r\e"
+    "stm": "itmux source-file $HOME/.tmux.conf\r\e"
+    "etm": "i$EDITOR $HOME/.tmux.conf\r\e"
     "tn": "itmux new\r\e"
     # vimrc
     "ev": "i$EDITOR $HOME/.vim_runtime/vimrcs/basic.vim\r\e"

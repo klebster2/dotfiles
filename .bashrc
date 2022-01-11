@@ -193,7 +193,7 @@ docker_rm_stop() {
 venv() {
     local python_version="$1"
     dir="./venv"
-    [ -d "$dir" ] && python$python_version -m venv "$dir"
+    [ ! -d "$dir" ] && python$python_version -m venv "$dir"
 }
 
 showfunc() {
@@ -310,11 +310,11 @@ alias srp='ssh_repeat_localhost_port'
 alias si="bindrc $HOME/.inputrc"
 
 # edit
-alias ei="edit_file $HOME/.inputrc"
-alias eb="edit_file $HOME/.bashrc"
+alias ei="$EDITOR $HOME/.inputrc"
+alias eb="$EDITOR $HOME/.bashrc"
 alias ebh="edit_bash_history_file"
-alias et="edit_file $HOME/.tmux.conf"
-alias ev="edit_file $HOME/.vim_runtime/vimrcs/basic.vim"
+alias et="$EDITOR $HOME/.tmux.conf"
+alias ev="$EDITOR $HOME/.vim_runtime/vimrcs/basic.vim"
 alias cdv="cd $HOME/.vim_runtime"
 alias si="bind -f $HOME/.inputrc"
 alias dl="dailylog"
@@ -330,26 +330,28 @@ alias nvd='nvim -d'
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/kleber/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$("${HOME}/miniconda3/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/kleber/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/kleber/miniconda3/etc/profile.d/conda.sh"
+    if [ -f "${HOME}/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "${HOME}/miniconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/home/kleber/miniconda3/bin:$PATH"
+        export PATH="${HOME}/kleber/miniconda3/bin:$PATH"
     fi
 fi
 
 unset __conda_setup
 # <<< conda initialize <<<
 
-export PATH="${HOME}/.local/bin:/bigdrive/kleber/environments/py3nvim/lib/python3.7:${PATH}"
+export PATH="${HOME}/.local/bin:${PATH}"
 
+# >>> ripgrep init >>>
 if type rg &> /dev/null; then
     export FZF_DEFAULT_COMMAND='rg --files'
     export FZF_DEFAULT_OPTS='-m --height 50% --border'
 fi
+# <<< ripgrep init <<<
 
 [ -f "$HOME/.env-vars" ] && source "$HOME/.env-vars"
 
