@@ -15,10 +15,6 @@ HISTCONTROL=ignoreboth
 # append to the history file, don't overwrite it
 shopt -s histappend;
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-#HISTSIZE=1000
-#HISTFILESIZE=2000
-
 # For setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 
 # Eternal bash history.
@@ -103,8 +99,9 @@ esac
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
+
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
 
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
@@ -144,25 +141,24 @@ if ! shopt -oq posix; then
   fi
 fi
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+[ -f  "${HOME}/.fzf.bash" ] && source "${HOME}/.fzf.bash"
 
 # >>> custom functions >>>
-. $HOME/.dotfiles/bashrc_functions.sh
+source "$HOME/.dotfiles/bashrc_functions.sh"
 # <<< custom shortcuts <<<
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$("${HOME}/miniconda3/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$("$HOME/miniconda3/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "${HOME}/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "${HOME}/miniconda3/etc/profile.d/conda.sh"
+    if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "$HOME/miniconda3/etc/profile.d/conda.sh"
     else
-        export PATH="${HOME}/kleber/miniconda3/bin:$PATH"
+        export PATH="$HOME/miniconda3/bin:$PATH"
     fi
 fi
-
 unset __conda_setup
 # <<< conda initialize <<<
 
