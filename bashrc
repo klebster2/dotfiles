@@ -27,7 +27,7 @@ export HISTTIMEFORMAT="[%F %T] "
 
 # Change the file location because certain bash sessions truncate .bash_history file upon close.
 # http://superuser.com/questions/575479/bash-history-truncated-to-500-lines-on-each-login
-export HISTFILE=~/.bash_eternal_history
+export HISTFILE="${HOME}/.bash_eternal_history"
 
 # Force prompt to write history after every command.
 # http://superuser.com/questions/20900/bash-history-loss
@@ -144,7 +144,7 @@ fi
 [ -f  "${HOME}/.fzf.bash" ] && source "${HOME}/.fzf.bash"
 
 # >>> custom functions >>>
-source "$HOME/.dotfiles/bashrc_functions.sh"
+source $HOME/.dotfiles/bash_functions.sh
 # <<< custom shortcuts <<<
 
 # >>> conda initialize >>>

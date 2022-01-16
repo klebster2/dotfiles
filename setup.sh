@@ -40,11 +40,18 @@ install_tmux_completion() {
         "https://raw.githubusercontent.com/Bash-it/bash-it/master/completion/available/tmux.completion.bash"
     popd
 }
-install_tmux_completion
 
 if_exists_bak "$HOME/.bashrc" && ln -sv "$HOME/.dotfiles/bashrc" "$HOME/.bashrc"
 if_exists_bak "$HOME/.inputrc" && ln -sv "$HOME/.dotfiles/inputrc" "$HOME/.inputrc"
 if_exists_bak "$HOME/.tmux.conf" && ln -sv "$HOME/.dotfiles/tmux.conf" "$HOME/.tmux.conf"
+
+install_tmux_completion
+
+conda > /dev/null 2>&1 \
+|| curl -Lo Miniconda3-latest-Linux-x86_64.sh \
+   "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh" \
+   && chmod +x ./Miniconda3-latest-Linux-x86_64.sh \
+   && ./Miniconda3-latest-Linux-x86_64.sh
 
 while true; do
     read -p "Do you wish to install klebster2's vimrc ? [Y/n]" yn
