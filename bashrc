@@ -147,7 +147,7 @@ fi
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # >>> custom functions >>>
-. $HOME/.dotfiles/.bashrc_functions.sh
+. $HOME/.dotfiles/bashrc_functions.sh
 # <<< custom shortcuts <<<
 
 # >>> conda initialize >>>
