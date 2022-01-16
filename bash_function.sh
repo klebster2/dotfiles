@@ -1,7 +1,6 @@
 #!/bin/bash
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-# Functions without args.
+# Functions without args - can be used in bash pipeline
 bindrc() {
     bind -f $HOME/.inputrc
 }
@@ -20,7 +19,7 @@ s2hms() {
 }
 
 s2hms_v() {
-    # seconds to hours minutes seconds (verbose version)
+    # seconds to hours minutes seconds (the verbose version)
     awk '{SUM+=$1}END{printf "S: %d\nH:M:S: %d:%d:%d\n",SUM,SUM/3600,SUM%3600/60,SUM%60}'
 }
 
@@ -33,11 +32,23 @@ hms2s() {
     awk -F: '{ print ($1 * 3600) + ($2 * 60) + $3 }'
 }
 
-findbashrcfunctions() {
+findbashfunctions() {
     # meta function
-    grep -P "^(function )?[a-zA-Z]\w+\(\) {" "${HOME}/.bashrc" \
-        | sed -r 's/\(\).*$//g'
+    for file in $@; do
+        grep -P "^(function )?[a-zA-Z]\w+\(\) {" "$file" \
+            | sed -r 's/\(\).*$//g'
+    done
 }
+
+source_bashrc() {
+    source "$HOME/.bashrc"
+}
+
+dailylog() {
+    [ ! -e "$HOME/.dailylog" ] && mkdir "$HOME/.dailylog"
+    "$EDITOR" "$HOME/.dailylog/$(date +%d_%m_%y)"
+}
+
 
 # Functions with args.
 docker_rm_stop() {
@@ -58,15 +69,6 @@ showfunc() {
     if (echo "$what_is" | head -n1 | grep -q "$1 is a function"); then
         echo "$what_is" | sed '1,3d;$d' | sed -r 's/^ {,4}//g'
     fi
-}
-
-source_bashrc() {
-    source "$HOME/.bashrc"
-}
-
-dailylog() {
-    [ ! -e "$HOME/.dailylog" ] && mkdir "$HOME/.dailylog"
-    "$EDITOR" "$HOME/.dailylog/$(date +%d_%m_%y)"
 }
 
 ssh_repeat_localhost_port() {
@@ -91,7 +93,7 @@ edit_history() {
     local bash_history_file="$1"
     perl -pe \
         'use POSIX qw(strftime); s/^#(\d+)/strftime "#%F %H:%M:%S", localtime($1)/e' \
-        "$1" | "$EDITOR" -
+        "$1" 
 }
 
 bakswp() {
@@ -156,12 +158,27 @@ env_add() {
     python -m ipykernel install --user --name="$env"
 }
 
+search_history() {
+    edit_history $HOME/.bash_eternal_history \
+        | awk -e '
+            BEGIN {RS = "\n"} {
+                if ($0 ~ /^#[[:digit:] ]*/)
+                    {
+                        printf "%s\t",$0
+                    }
+                else {
+                    print $0
+                }
+            }' \
+        | fzf | cut -d $'\t' -f2-
+}
+
 # >>> custom shortcuts >>>
 
 # CAUTIONARY NOTE: Aliases may interfere with other commands!
 alias fwh="find_windows_home"
 alias guc="git_config_change_user_credentials"
-alias ff='findbashrcfunctions'
+alias ff="findbashfunctions ${HOME}/.bashrc $HOME/.dotfiles/.bashrc_functions.sh"
 alias sf='showfunc'
 # e.g. run
 # ff
@@ -173,7 +190,7 @@ alias si="bindrc $HOME/.inputrc"
 # edit
 alias ei="$EDITOR $HOME/.inputrc"
 alias eb="$EDITOR $HOME/.bashrc"
-alias ebh="edit_history $HOME/.bash_eternal_history"
+alias ebh="edit_history $HOME/.bash_eternal_history | $EDITOR -"
 alias et="$EDITOR $HOME/.tmux.conf"
 alias ev="$EDITOR $HOME/.vim_runtime/vimrcs/basic.vim"
 alias cdv="cd $HOME/.vim_runtime"
