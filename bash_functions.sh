@@ -115,24 +115,19 @@ git_change_user_info() {
         || echo "unsuccessful"
 }
 
-
-git_config_change_user_info_option_prompt() {
-    local _option="$1"
-    echo "git config --get ${_option}"
-    git config --get "${_option}"
-    read -p "Change ${_option} (y/n)?" y_n
-    msg="option selected"
-    case "$y_n" in
-        y|Y|Yes|yes ) echo "'${y_n}' $msg'"; git_change_user_info ${y_n};;
-        n|N|No|no ) echo "'${y_n}' $msg, skipping";;
-        * ) echo "invalid";;
-    esac
-}
-
 git_config_change_user_credentials() {
     printf "Change name and email for current commit?\n"
-    for option in user.name user.email; do
-        git_config_change_user_info_option_prompt "$option"
+    for _option in user.name user.email; do
+        printf "git config --get ${_option} ==> "
+        git config --get "${_option}"
+        read -p "Change ${_option} (y/n/q)? " y_n_q
+        msg="option selected"
+        case "$y_n_q" in
+            y|Y|Yes|yes ) echo "'${y_n_q}' $msg'"; git_change_user_info ${y_n_q};;
+            n|N|No|no ) echo "'${y_n_q}' $msg, skipping";;
+            q|Q|Quit|quit ) echo "'${y_n_q}' $msg, quitting"; break;;
+            * ) echo "invalid";;
+        esac
     done
 }
 
@@ -170,7 +165,7 @@ search_history() {
                     print $0
                 }
             }' \
-        | sort -r | fzf | cut -d $'\t' -f2-
+        | sort -r | tr -d '#' | fzf | cut -d $'\t' -f2-
 }
 
 # >>> custom shortcuts >>>
