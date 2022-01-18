@@ -48,12 +48,6 @@ if_exists_bak "$HOME/.fzf.bash" && ln -sv "$HOME/.dotfiles/fzf.bash" "$HOME/.fzf
 
 install_tmux_completion
 
-conda > /dev/null 2>&1 \
-|| curl -Lo Miniconda3-latest-Linux-x86_64.sh \
-   "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh" \
-   && chmod +x ./Miniconda3-latest-Linux-x86_64.sh \
-   && ./Miniconda3-latest-Linux-x86_64.sh
-
 while true; do
     read -p "Do you wish to install klebster2's vimrc ? [Y/n]" yn
     case $yn in
