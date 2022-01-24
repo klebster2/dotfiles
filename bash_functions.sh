@@ -110,7 +110,7 @@ disksp() {
 
 git_change_user_info() {
     local _option="$1"
-    read -p "option: " value
+    read -p "new $_option: " value
     git config --local "$_option" "$value" && echo "successfuly changed" \
         || echo "unsuccessful"
 }
@@ -118,12 +118,12 @@ git_change_user_info() {
 git_config_change_user_credentials() {
     printf "Change name and email for current commit?\n"
     for _option in user.name user.email; do
-        printf "git config --get ${_option} ==> "
+        printf "git config --get ${_option} => "
         git config --get "${_option}"
         read -p "Change ${_option} (y/n/q)? " y_n_q
         msg="option selected"
         case "$y_n_q" in
-            y|Y|Yes|yes ) echo "'${y_n_q}' $msg'"; git_change_user_info ${y_n_q};;
+            y|Y|Yes|yes ) echo "'${y_n_q}' $msg'"; git_change_user_info "${_option}";;
             n|N|No|no ) echo "'${y_n_q}' $msg, skipping";;
             q|Q|Quit|quit ) echo "'${y_n_q}' $msg, quitting"; break;;
             * ) echo "invalid";;
