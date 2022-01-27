@@ -179,5 +179,4 @@ fi
 export PATH_NOT_UNIQ="$PATH"
 export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
 
-. "${HOME}/.env-vars"
-source "${HOME}/.dotfiles/tmux.completion.bash"
+[ -f "${HOME}/.dotfiles/tmux.completion.bash" ] && source "${HOME}/.dotfiles/tmux.completion.bash"
