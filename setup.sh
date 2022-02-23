@@ -41,11 +41,17 @@ install_tmux_completion() {
     popd
 }
 
+install_fzf() {
+    git clone --depth 1 "https://github.com/junegunn/fzf.git" "$HOME/.fzf"
+    "$HOME/.fzf/install"
+}
+
 if_exists_bak "$HOME/.bashrc" && ln -sv "$HOME/.dotfiles/bashrc" "$HOME/.bashrc"
 if_exists_bak "$HOME/.inputrc" && ln -sv "$HOME/.dotfiles/inputrc" "$HOME/.inputrc"
 if_exists_bak "$HOME/.tmux.conf" && ln -sv "$HOME/.dotfiles/tmux.conf" "$HOME/.tmux.conf"
 if_exists_bak "$HOME/.fzf.bash" && ln -sv "$HOME/.dotfiles/fzf.bash" "$HOME/.fzf.bash"
 
+install_fzf
 install_tmux_completion
 
 while true; do
