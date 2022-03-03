@@ -126,7 +126,7 @@ git_config_change_user_credentials() {
             y|Y|Yes|yes ) echo "'${y_n_q}' $msg'"; git_change_user_info "${_option}";;
             n|N|No|no ) echo "'${y_n_q}' $msg, skipping";;
             q|Q|Quit|quit ) echo "'${y_n_q}' $msg, quitting"; break;;
-            * ) echo "invalid";;
+            * ) echo "invalid option... quitting";;
         esac
     done
 }
