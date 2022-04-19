@@ -149,15 +149,18 @@ fi
 # <<< custom shortcuts <<<
 
 # >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/kleber/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+# try to use first path found below root, with maxdepth 2 to find miniconda
+# this is because miniconda could be in a larger storage position
+miniconda="$(find / -maxdepth 2 -iname "${USER}" -type d 2>/dev/null -exec find {} -iname "miniconda*" -type d -maxdepth 2 \; | head -n1)"
+
+__conda_setup="$("$miniconda/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/kleber/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/kleber/miniconda3/etc/profile.d/conda.sh"
+    if [ -f "$miniconda/etc/profile.d/conda.sh" ]; then
+        . "$miniconda/etc/profile.d/conda.sh"
     else
-        export PATH="/home/kleber/miniconda3/bin:$PATH"
+        export PATH="$miniconda/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -172,7 +175,9 @@ if type rg &> /dev/null; then
 fi
 # <<< ripgrep init <<<
 
-[ -f "$HOME/.env-vars" ] && source "$HOME/.env-vars"
+
+[ -f "$HOME/.env-vars" ] && export $(cat "$HOME/.env-vars" | xargs)
+[ -f "$HOME/.env" ] && export $(cat "$HOME/.env" | xargs)
 
 # remove duplicate PATHs for readability
 # https://unix.stackexchange.com/questions/40749/remove-duplicate-path-entries-with-awk-command

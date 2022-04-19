@@ -34,11 +34,14 @@ install_vimrc() {
     popd
 }
 
+install_tmux() {
+    apt-get install tmux || sudo apt-get install tmux
+}
+
 install_tmux_completion() {
-    pushd "$HOME/.dotfiles/"
-    curl -o tmux.completion.bash \
+    tmux -V &>/dev/null || check_user_input "tmux" "install_tmux"
+    curl -o $HOME/.dotfiles/tmux.completion.bash \
         "https://raw.githubusercontent.com/Bash-it/bash-it/master/completion/available/tmux.completion.bash"
-    popd
 }
 
 install_fzf() {
@@ -46,19 +49,35 @@ install_fzf() {
     "$HOME/.fzf/install"
 }
 
+install_chtsh() {
+    PATH_DIR="$HOME/.local/bin"  # or another directory on your $PATH
+    mkdir -p "$PATH_DIR"
+    curl "https://cht.sh/:cht.sh" > "$PATH_DIR/cht.sh"
+    chmod +x "$PATH_DIR/cht.sh"
+}
+
+
+check_user_input() {
+    local _prog="$1" _installer="$2"
+    while true; do
+        read -p "Do you want to install $_prog ? [Y/n]" y_n
+        case "$y_n" in
+            Y|y|Yes|yes ) $_installer ; break;;
+            N|n|No|no ) echo "'${y_n}' $msg, skipping"; break;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+}
+
+# defaults
 if_exists_bak "$HOME/.bashrc" && ln -sv "$HOME/.dotfiles/bashrc" "$HOME/.bashrc"
 if_exists_bak "$HOME/.inputrc" && ln -sv "$HOME/.dotfiles/inputrc" "$HOME/.inputrc"
+
+# extras
 if_exists_bak "$HOME/.tmux.conf" && ln -sv "$HOME/.dotfiles/tmux.conf" "$HOME/.tmux.conf"
 if_exists_bak "$HOME/.fzf.bash" && ln -sv "$HOME/.dotfiles/fzf.bash" "$HOME/.fzf.bash"
 
-install_fzf
-install_tmux_completion
 
-while true; do
-    read -p "Do you wish to install klebster2's vimrc ? [Y/n]" yn
-    case $yn in
-        [Yy]* ) install_vimrc; break;;
-        [Nn]* ) exit;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
+check_user_input "fzf" "install_fzf"
+check_user_input "tmux_completer" "install_tmux_completion"
+check_user_input "chtsh" "install_chtsh"

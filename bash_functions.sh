@@ -154,18 +154,18 @@ env_add() {
 }
 
 search_history() {
-edit_history $HOME/.bash_eternal_history | \
-    python -c "import re,sys;\
-    print(\
-        ''.join(\
-            [\
-            '{}   '.format(line.rstrip()) \
-            if re.match('^\#[0-9]{4,4}\-[0-9]{2,2}\-[0-9]{2,2} [0-9]{2,2}:[0-9]{2,2}:[0-9]{2,2}', line) \
-            else '{}\n'.format(line.rstrip()) \
-            for line in sys.stdin.readlines()\
-            ]\
-        )\
-    )" | grep -P "^\#[0-9]{4,4}\-[0-9]{2,2}\-[0-9]{2,2} "
+    edit_history $HOME/.bash_eternal_history | \
+        python -c "import re,sys;\
+        print(\
+            ''.join(\
+                [\
+                '{}   '.format(line.rstrip()) \
+                if re.match('^\#[0-9]{4,4}\-[0-9]{2,2}\-[0-9]{2,2} [0-9]{2,2}:[0-9]{2,2}:[0-9]{2,2}', line) \
+                else '{}\n'.format(line.rstrip()) \
+                for line in sys.stdin.readlines()\
+                ]\
+            )\
+        )" | grep -P "^\#[0-9]{4,4}\-[0-9]{2,2}\-[0-9]{2,2} "
 }
 
 python_find_files() {
