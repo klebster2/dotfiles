@@ -182,3 +182,5 @@ export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV
 [ -f "${HOME}/.dotfiles/tmux.completion.bash" ] && source "${HOME}/.dotfiles/tmux.completion.bash"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+alias luamake="$HOME/lua-language-server/3rd/luamake/luamake"
