@@ -93,7 +93,7 @@ edit_history() {
     local bash_history_file="$1"
     perl -pe \
         'use POSIX qw(strftime); s/^#(\d+)/strftime "#%F %H:%M:%S", localtime($1)/e' \
-        "$1" 
+        "$1"
 }
 
 bakswp() {
@@ -154,18 +154,22 @@ env_add() {
 }
 
 search_history() {
-    edit_history $HOME/.bash_eternal_history \
-        | awk -e '
-            BEGIN {RS = "\n"} {
-                if ($0 ~ /^#[[:digit:] ]*/)
-                    {
-                        printf "%s\t",$0
-                    }
-                else {
-                    print $0
-                }
-            }' \
-        | sort -r | tr -d '#' | fzf | cut -d $'\t' -f2-
+    edit_history $HOME/.bash_eternal_history | \
+        python -c "import re,sys;\
+        print(\
+            ''.join(\
+                [\
+                '{}   '.format(line.rstrip()) \
+                if re.match('^\#[0-9]{4,4}\-[0-9]{2,2}\-[0-9]{2,2} [0-9]{2,2}:[0-9]{2,2}:[0-9]{2,2}', line) \
+                else '{}\n'.format(line.rstrip()) \
+                for line in sys.stdin.readlines()\
+                ]\
+            )\
+        )" | grep -P "^\#[0-9]{4,4}\-[0-9]{2,2}\-[0-9]{2,2} "
+}
+
+python_find_files() {
+    "$EDITOR" -O $(find . -iname "*.py" | fzf | tr '\n' ' ') 2>/dev/null
 }
 
 # >>> custom shortcuts >>>
@@ -173,7 +177,7 @@ search_history() {
 # CAUTIONARY NOTE: Aliases may interfere with other commands!
 alias fwh="find_windows_home"
 alias guc="git_config_change_user_credentials"
-alias ff="findbashfunctions ${HOME}/.bashrc $HOME/.dotfiles/.bashrc_functions.sh"
+alias bff="findbashfunctions ${HOME}/.bashrc $HOME/.dotfiles/bash_functions.sh"
 alias sf='showfunc'
 # e.g. run
 # ff
@@ -199,5 +203,7 @@ alias dt="date +%T"
 alias nv='nvim'
 alias vimdiff='nvim -d'
 alias nvd='nvim -d'
+
+alias pff='python_find_files'
 # to access vim run \vim, this will not access neovim
 

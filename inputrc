@@ -13,11 +13,11 @@ $if mode=vi
     # custom commands
     # inputrc
     ## edit input rc
-    "eirc": "i$EDITOR $HOME/.inputrc\r\e"
+    "erc": "i$EDITOR $HOME/.inputrc\r\e"
     ## source input rc
-    "sirc": "ibind -f $HOME/.inputrc\r\e"
+    "src": "ibind -f $HOME/.inputrc\r\e"
     ## cd dotfiles
-    "cddf": "icd $HOME/.dotfiles\r\e"
+    "cdd": "icd $HOME/.dotfiles\r\e"
     # dl: dailylog
     "dl": "idl\r\e"
     # bash: find bash functions
