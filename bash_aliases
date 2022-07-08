@@ -57,3 +57,8 @@ alias pipconf='python -m pip config debug'
 # clean extraneous python files that are not useful to keep in git
 alias rmps='rm_pyshit'
 alias rmpys='rm_pyshit'
+
+# cheatsheet help e.g. ./cht.sh
+alias cht="cht.sh"
+alias chtsh="cht.sh"
+alias chtsht="cht.sh"
