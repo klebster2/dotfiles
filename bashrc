@@ -168,8 +168,8 @@ if type rg &> /dev/null; then
 fi
 # <<< ripgrep init <<<
 
-[ -f "$HOME/.env-vars" ] && export $(cat "$HOME/.env-vars" | xargs)
-[ -f "$HOME/.env" ] && export $(cat "$HOME/.env" | xargs)
+#[ -f "$HOME/.env-vars" ] && export $(cat "$HOME/.env-vars" | xargs)
+#[ -f "$HOME/.env" ] && export $(cat "$HOME/.env" | xargs)
 
 # remove duplicate PATHs for readability
 # OR - even better - (TODO) find where they are added to path
@@ -185,3 +185,5 @@ export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV
 # sl
 # clear; trollface1 | lolcat; sleep 1; clear
 # clear; trollface2 | lolcat; sleep 1; clear
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
