@@ -122,15 +122,11 @@ alias l='ls -CF'
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
 if [ -f "${HOME}"/.bash_aliases ]; then
     . "${HOME}"/.bash_aliases
 fi
 
-# enable programmable completion features (you don't need to enable
+# Enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
@@ -141,11 +137,8 @@ if ! shopt -oq posix; then
   fi
 fi
 
-[ -f "${HOME}/.fzf.bash" ] && source "${HOME}/.fzf.bash"
-
 # >>> custom functions >>>
-[ -f "${HOME}/.dotfiles/bash_functions.sh" ] && \
-    source "$HOME/.dotfiles/bash_functions.sh"
+[ -f "${HOME}/.bash_functions" ] && source "$HOME/.bash_functions"
 # <<< custom shortcuts <<<
 
 # >>> conda initialize >>>
@@ -175,15 +168,20 @@ if type rg &> /dev/null; then
 fi
 # <<< ripgrep init <<<
 
-
 [ -f "$HOME/.env-vars" ] && export $(cat "$HOME/.env-vars" | xargs)
 [ -f "$HOME/.env" ] && export $(cat "$HOME/.env" | xargs)
 
 # remove duplicate PATHs for readability
+# OR - even better - (TODO) find where they are added to path
 # https://unix.stackexchange.com/questions/40749/remove-duplicate-path-entries-with-awk-command
+
 export PATH_NOT_UNIQ="$PATH"
 export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
 
 [ -f "${HOME}/.dotfiles/tmux.completion.bash" ] && source "${HOME}/.dotfiles/tmux.completion.bash"
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# Some evil commands to add to your friend's bashrc
+# echo "Hi ᵔᴥᵔ"
+# sl
+# clear; trollface1 | lolcat; sleep 1; clear
+# clear; trollface2 | lolcat; sleep 1; clear
