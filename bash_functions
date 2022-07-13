@@ -221,16 +221,17 @@ env_add() {
 
 make_python_library() {
     local library_name="$1"
-	library_name_underscore="${1//-/_}"
+    if [ ! -z "$library_name" ]; then
+        library_name_underscore="${1//-/_}"
 
-    mkdir "$library_name"
-    pushd "$library_name"
+        mkdir "$library_name"
+        pushd "$library_name"
 
-    mkdir "$library_name_underscore"
-    touch "$library_name_underscore/__init__.py"
+        mkdir "$library_name_underscore"
+        touch "$library_name_underscore/__init__.py"
 
-    # setup.py boilerplate
-    cat << EOF >> setup.py
+        # setup.py boilerplate
+        cat << EOF >> setup.py
 from setuptools import setup, find_packages
 
 setup(
@@ -239,9 +240,9 @@ setup(
         exclude=["tests*"],
     ),
     version="0.1.0",
-    description="azure blob utils",
+    description="",
     author="",
-    python_requires=">=3.7",
+    python_requires=">=3.7",  # 3.7 for typing
     install_requires=[
     ],
     extras_require={
@@ -254,8 +255,8 @@ setup(
     },
 )
 EOF
-    # cli.py boilerplate
-    cat << EOF >> $library_name_underscore/cli.py
+        # cli.py boilerplate
+        cat << EOF >> $library_name_underscore/cli.py
 import argparse
 
 def get_args():
@@ -271,12 +272,12 @@ if __name__ == "__main__":
     main()
 EOF
 
-    # tests for pytest boilerplate
-    mkdir tests
-    touch ./tests/__init__.py
-    mkdir ./tests/fixtures
-	# scaffold for test fixures imports
-	cat << EOF >> "./tests/fixtures/__init__.py"
+        # tests for pytest boilerplate
+        mkdir tests
+        touch ./tests/__init__.py
+        mkdir ./tests/fixtures
+        # scaffold for test fixures imports
+        cat << EOF >> "./tests/fixtures/__init__.py"
 import os
 from pathlib import Path
 
@@ -284,5 +285,9 @@ import pytest
 TEST_FIXTURES = Path(os.path.dirname(__file__))
 #EXAMPLE_FIXTURE= TEST_FIXTURES / \"example.txt\"
 EOF
+        popd
+    else
+        printf "No library name provided!\nPlease Provide a name for the new library.\nExiting.\n"
+    fi
 }
 # >>> Functions with args. >>>

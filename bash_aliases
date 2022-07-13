@@ -31,7 +31,7 @@ alias ei="$EDITOR $HOME/.inputrc"
 alias eb="$EDITOR $HOME/.bashrc"
 alias ebh="edit_history $HOME/.bash_eternal_history | $EDITOR -"
 alias et="$EDITOR $HOME/.tmux.conf"
-alias ev="$EDITOR $HOME/.vim_runtime/nvim/lua/init.vim"
+alias ev="$EDITOR $HOME/.vim_runtime/nvim/init.lua"
 alias eV="$EDITOR $HOME/.vim_runtime/nvim"  # higher level view over vim/nvim files
 
 # change directory
@@ -55,10 +55,8 @@ alias pff='python_find_files'
 alias pipconf='python -m pip config debug'
 
 # clean extraneous python files that are not useful to keep in git
-alias rmps='rm_pyshit'
-alias rmpys='rm_pyshit'
+alias rm_pys='rm_pyshit'
 
 # cheatsheet help e.g. ./cht.sh
 alias cht="cht.sh"
 alias chtsh="cht.sh"
-alias chtsht="cht.sh"
