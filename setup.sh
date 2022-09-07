@@ -49,6 +49,10 @@ install_fzf() {
     "$HOME/.fzf/install"
 }
 
+install_fzf_git() {
+    git clone --depth 1 "https://github.com/junegunn/fzf-git.sh" "$HOME/.fzf-git"
+}
+
 install_chtsh() {
     PATH_DIR="$HOME/.local/bin"  # or another directory on your $PATH
     mkdir -p "$PATH_DIR"
@@ -70,6 +74,11 @@ check_user_input() {
     echo
 }
 
+install_tpm() {
+    [ -d "${HOME}/.tmux/plugins" ] || mkdir -pv "${HOME}/.tmux/plugins"
+    git clone "https://github.com/tmux-plugins/tpm" "${HOME}/.tmux/plugins/tpm"
+}
+
 # defaults
 if_exists_bak "$HOME/.bashrc" && ln -sv "$HOME/.dotfiles/bashrc" "$HOME/.bashrc"
 if_exists_bak "$HOME/.bash_functions" && ln -sv "$HOME/.dotfiles/bash_functions" "$HOME/.bash_functions"
@@ -82,6 +91,8 @@ if_exists_bak "$HOME/.inputrc" && ln -sv "$HOME/.dotfiles/inputrc" "$HOME/.input
 if_exists_bak "$HOME/.tmux.conf" && ln -sv "$HOME/.dotfiles/tmux.conf" "$HOME/.tmux.conf"
 if_exists_bak "$HOME/.fzf.bash" && ln -sv "$HOME/.dotfiles/fzf.bash" "$HOME/.fzf.bash"
 
-check_user_input "fzf" "install_fzf"
-check_user_input "tmux_completer" "install_tmux_completion"
-check_user_input "chtsh" "install_chtsh"
+check_user_input "fzf - fuzzy file finder" "install_fzf"
+check_user_input "fzf-git.sh" "install_fzf_git"
+check_user_input "tmux completer" "install_tmux_completion"
+check_user_input "tpm - tmux plugin manager" "install_tpm"
+check_user_input "chtsh - cheat sheet" "install_chtsh"

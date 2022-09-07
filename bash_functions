@@ -77,7 +77,9 @@ python_find_files() {
 rm_pyshit() {
 	# Remove local temp files that add unneeded information to a repository
 	find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
-	rm -r build *.egg-info
+    [ -d build ] && rm -r build 
+	[ -d *.egg-info ] && rm -r build 
+    [ -d dist ] && rm -r dist
 }
 
 find_windows_home() {

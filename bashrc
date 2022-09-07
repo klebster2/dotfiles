@@ -95,36 +95,8 @@ xterm*|rxvt*)
     ;;
 esac
 
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-
-    alias dir='dir --color=auto'
-    alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
-
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-
-# Add an "alert" alias for long running commands.  Use like so:
-#   sudo apt install libnotify-bin
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-# Alias definitions.
-if [ -f "${HOME}"/.bash_aliases ]; then
-    . "${HOME}"/.bash_aliases
-fi
 
 # Enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -138,13 +110,22 @@ if ! shopt -oq posix; then
 fi
 
 # >>> custom functions >>>
-[ -f "${HOME}/.bash_functions" ] && source "$HOME/.bash_functions"
-# <<< custom shortcuts <<<
+if [ -f "${HOME}/.bash_functions" ]; then
+    . "$HOME/.bash_functions"
+fi
+# <<< custom functions <<<
+
+# >>> alias definitions >>>
+if [ -f "${HOME}/.bash_aliases" ]; then
+    . "${HOME}/.bash_aliases"
+fi
+# <<< alias definitions <<<
 
 # >>> conda initialize >>>
 # try to use first path found below root, with maxdepth 2 to find miniconda
 # this is because miniconda could be in a larger storage position
-miniconda="$(find / -maxdepth 2 -iname "${USER}" -type d 2>/dev/null -exec find {} -iname "miniconda*" -type d -maxdepth 2 \; | head -n1)"
+miniconda="$(find / -maxdepth 2 -iname "${USER}" -type d 2>/dev/null -exec find {} -iname "miniconda*" -type d -maxdepth 1 \; | head -n1)"
+
 
 __conda_setup="$("$miniconda/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
@@ -164,7 +145,7 @@ export PATH="${HOME}/.local/bin:${PATH}"
 # >>> ripgrep init >>>
 if type rg &> /dev/null; then
     export FZF_DEFAULT_COMMAND='rg --files'
-    export FZF_DEFAULT_OPTS='-m --height 50% --border'
+    export FZF_DEFAULT_OPTS='-m --height 50% --border --color=bg+:#3c3836,bg:#32302f,spinner:#fb4934,hl:#928374,fg:#ebdbb2,header:#928374,info:#8ec07c,pointer:#fb4934,marker:#fb4934,fg+:#ebdbb2,prompt:#fb4934,hl+:#fb4934'
 fi
 # <<< ripgrep init <<<
 
@@ -183,7 +164,7 @@ export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV
 # Some evil commands to add to your friend's bashrc
 # echo "Hi ᵔᴥᵔ"
 # sl
-# clear; trollface1 | lolcat; sleep 1; clear
-# clear; trollface2 | lolcat; sleep 1; clear
+# clear; trollface1 | lolcat; sleep 1; clear; trollface2 | lolcat; sleep 1; clear
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+[ -d ~/.fzf ] && [ -d ~/.fzf-git ] && . ~/.fzf-git/fzf-git.sh
