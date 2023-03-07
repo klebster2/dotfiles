@@ -11,29 +11,30 @@ $if mode=vi
     "G": end-of-history
     "~~": capitalize-word
     # custom commands
-    # inputrc
-    ## edit input rc
-    "erc": "i$EDITOR $HOME/.inputrc\r\e"
-    ## source input rc
-    "src": "ibind -f $HOME/.inputrc\r\e"
+    ## >>> configuration commands >>>
+    # edit base rc file '~/.bashrc'
+    "eb": "i$EDITOR $HOME/.bashrc\r\e"
+    ### edit input rc
+    "ei": "i$EDITOR $HOME/.inputrc\r\e"
+    ### source input rc
+    "si": "ibind -f $HOME/.inputrc\r\e"
     ## cd dotfiles
     "cdd": "icd $HOME/.dotfiles\r\e"
-    # dl: dailylog
-    "dl": "idl\r\e"
-    # bash: find bash functions
-    "ff": "iff\r\e"
-    # bash: edit history - see .bashrc
+    ## dl: dailylog see $HOME/.dotfiles/bash_functions and $HOME/.dotfiles/bash_aliases
+    "dl": "i dl\r\e"
+    ## bash: find bash functions
+    "ff": "i findbashfunctions\r\e"
+    ## bash: edit history - see .bashrc
     "ebh": "iebh\r\e"
     # source base rc file '~/.bashrc'
     "sbrc": "isource $HOME/.bashrc\r\e"
-    # edit base rc file '~/.bashrc'
-    "ebrc": "i$EDITOR $HOME/.bashrc\r\e"
     # tmux
     "stm": "itmux source-file $HOME/.tmux.conf\r\e"
     "etm": "i$EDITOR $HOME/.tmux.conf\r\e"
     "tn": "itmux new\r\e"
     # vimrc
-    "ev": "i$EDITOR $HOME/.vim_runtime/vimrcs/basic.vim\r\e"
+    "ev": "i$EDITOR $HOME/.vim_runtime/nvim/init.lua\r\e"
+    # cd to vimrc
     "cdv": "icd $HOME/.vim_runtime\r\e"
     # dailylog
     "dl": "idl\r\e"

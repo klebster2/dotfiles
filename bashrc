@@ -110,23 +110,22 @@ if ! shopt -oq posix; then
 fi
 
 # >>> custom functions >>>
-if [ -f "${HOME}/.bash_functions" ]; then
+if [ -f "$HOME/.bash_functions" ]; then
     . "$HOME/.bash_functions"
 fi
 # <<< custom functions <<<
 
 # >>> alias definitions >>>
-if [ -f "${HOME}/.bash_aliases" ]; then
-    . "${HOME}/.bash_aliases"
+if [ -f "$HOME/.bash_aliases" ]; then
+    . "$HOME/.bash_aliases"
 fi
 # <<< alias definitions <<<
 
 # >>> conda initialize >>>
 # try to use first path found below root, with maxdepth 2 to find miniconda
 # this is because miniconda could be in a larger storage position
-miniconda="$(find / -maxdepth 2 -iname "${USER}" -type d 2>/dev/null -exec find {} -iname "miniconda*" -type d -maxdepth 1 \; | head -n1)"
-
-
+miniconda="$(find / -mindepth 1 -maxdepth 2 -iname "${USER}" -type d 2>/dev/null \
+    -exec find {} -iname "miniconda*" -type d -maxdepth 1 \; | head -n1)"
 __conda_setup="$("$miniconda/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
@@ -145,6 +144,7 @@ export PATH="${HOME}/.local/bin:${PATH}"
 # >>> ripgrep init >>>
 if type rg &> /dev/null; then
     export FZF_DEFAULT_COMMAND='rg --files'
+    # gruvbox colorscheme
     export FZF_DEFAULT_OPTS='-m --height 50% --border --color=bg+:#3c3836,bg:#32302f,spinner:#fb4934,hl:#928374,fg:#ebdbb2,header:#928374,info:#8ec07c,pointer:#fb4934,marker:#fb4934,fg+:#ebdbb2,prompt:#fb4934,hl+:#fb4934'
 fi
 # <<< ripgrep init <<<
@@ -153,9 +153,7 @@ fi
 #[ -f "$HOME/.env" ] && export $(cat "$HOME/.env" | xargs)
 
 # remove duplicate PATHs for readability
-# OR - even better - (TODO) find where they are added to path
-# https://unix.stackexchange.com/questions/40749/remove-duplicate-path-entries-with-awk-command
-
+# OR - even better - TODO - find where they are added to path
 export PATH_NOT_UNIQ="$PATH"
 export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
 
@@ -168,3 +166,6 @@ export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 [ -d ~/.fzf ] && [ -d ~/.fzf-git ] && . ~/.fzf-git/fzf-git.sh
+
+alias luamake=/home/kleber/.vim_runtime/nvim/lua-language-server/3rd/luamake/luamake
+export OPENAI_API_KEY=

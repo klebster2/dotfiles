@@ -31,6 +31,19 @@ alias guc="git_config_change_user_credentials"
 # TODO: make this recursive with maxdepth
 alias bff="findbashfunctions $HOME/.bash_functions"
 
+# edit configuration file
+alias ei="$EDITOR $HOME/.inputrc"
+alias eb="$EDITOR $HOME/.bashrc"
+alias eba="$EDITOR $HOME/.bash_aliases"
+alias aliases="cat $HOME/.bash_aliases|grep -P '^( *alias)'|sed 's/^ *//g'"
+alias ebf="$EDITOR $HOME/.bash_functions"
+alias et="$EDITOR $HOME/.tmux.conf"
+alias ev="$EDITOR $HOME/.vim_runtime/nvim/init.lua"
+alias ep="$EDITOR $HOME/.vim_runtime/nvim/lua/packer-startup.lua"
+alias evcmp="$EDITOR $HOME/.vim_runtime/nvim/lua/plugins/nvim-cmp-cfg.lua"
+# view bash history with timestamps
+alias ebh="edit_history $HOME/.bash_eternal_history | $EDITOR -"
+
 # show all functions
 alias sf='showfunc'
 # e.g. run
@@ -45,21 +58,12 @@ alias sb='source $HOME/.bashrc'
 # sudo ssh $(srp 8087 8088) -o ServerAliveInterval=30 user@localhost -i ~/.ssh/authorized_keys/key.ssh -p 2249
 alias srp='ssh_repeat_localhost_port'
 
-alias si="bind -f $HOME/.inputrc"
-
-# edit config
-alias ei="$EDITOR $HOME/.inputrc"
-alias eb="$EDITOR $HOME/.bashrc"
-alias ebh="edit_history $HOME/.bash_eternal_history | $EDITOR -"
-alias et="$EDITOR $HOME/.tmux.conf"
-alias ev="$EDITOR $HOME/.vim_runtime/nvim/init.lua"
-alias eV="$EDITOR $HOME/.vim_runtime/nvim"  # higher level view over vim/nvim files
-
 # change directory
 alias cdv="cd $HOME/.vim_runtime"
 alias cdd="cd $HOME/.dotfiles"
-alias cdh="cd $HOME"
+# source inputrc file
 alias si="bind -f $HOME/.inputrc"
+
 alias dl="dailylog"
 alias dT="date"
 alias dt="date +%T"
@@ -67,6 +71,7 @@ alias dt="date +%T"
 # editor aliases
 alias nv='nvim'
 alias nvd='nvim -d'
+alias nvd='vimdiff'
 # NOTE: To access vim use \vim, this will not access neovim
 
 # python finders
