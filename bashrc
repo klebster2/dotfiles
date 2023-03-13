@@ -149,11 +149,11 @@ if type rg &> /dev/null; then
 fi
 # <<< ripgrep init <<<
 
-#[ -f "$HOME/.env-vars" ] && export $(cat "$HOME/.env-vars" | xargs)
-#[ -f "$HOME/.env" ] && export $(cat "$HOME/.env" | xargs)
+[ -f "$HOME/.env-vars" ] && "$HOME/.env-vars"
+[ -f "$HOME/.env" ] && "$HOME/.env"
+[ -f "$HOME/.dotfiles/variables.sh" ] && "$HOME/.dotfiles/variables.sh"
 
 # remove duplicate PATHs for readability
-# OR - even better - TODO - find where they are added to path
 export PATH_NOT_UNIQ="$PATH"
 export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
 
