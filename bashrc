@@ -111,7 +111,7 @@ fi
 
 # >>> custom functions >>>
 if [ -f "$HOME/.bash_functions" ]; then
-    . "$HOME/.bash_functions"
+    source "$HOME/.bash_functions"
 fi
 # <<< custom functions <<<
 
@@ -157,7 +157,7 @@ fi
 export PATH_NOT_UNIQ="$PATH"
 export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
 
-[ -f "${HOME}/.dotfiles/tmux.completion.bash" ] && source "${HOME}/.dotfiles/tmux.completion.bash"
+[ -f "$HOME/.dotfiles/tmux.completion.bash" ] && source "$HOME/.dotfiles/tmux.completion.bash"
 
 # Some evil commands to add to your friend's bashrc
 # echo "Hi ᵔᴥᵔ"

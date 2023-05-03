@@ -99,6 +99,20 @@ trollfaces() {
 # >>> Functions without args. >>>
 
 # <<< Functions with args. <<<
+win2linux_path() {
+	# ensure arg is quoted e.g.
+	# $ echo "C:\Users\KleberNoel\Downloads" | sed -e 's|\\|/|g;s|C:|/mnt/c|'
+	# /mnt/c/Users/KleberNoel/Downloads
+	if [ "$#" -eq 0 ]; then
+		echo "No args provided to function. Exiting."
+		exit 1
+	elif [ "$#" -gt 1 ]; then
+		echo "More than one arg provided to function. Ensure paths with spaces are enclosed by quotes. Exiting"
+		exit 1
+	else
+		echo "$1" | sed -re 's|\\|/|g;s|^[C-Z]:|/mnt/c|'
+	fi
+}
 docker_rm_stop() {
 	docker stop $1
 	docker rm $1
@@ -144,9 +158,7 @@ ssh_repeat_localhost_port() {
 
 edit_history() {
 	local bash_history_file="$1"
-	perl -pe \
-		'use POSIX qw(strftime); s/^#(\d+)/strftime "#%F %H:%M:%S", localtime($1)/e' \
-		"$1"
+	perl -pe 'use POSIX qw(strftime); s/^#(\d+)/strftime "#%F %H:%M:%S", localtime($1)/e' "$1"
 }
 
 bakswp() {
