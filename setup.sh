@@ -60,7 +60,6 @@ install_chtsh() {
     chmod +x "$PATH_DIR/cht.sh"
 }
 
-
 check_user_input() {
     local _prog="$1" _installer="$2"
     while true; do
@@ -78,18 +77,18 @@ install_tpm() {
     [ -d "${HOME}/.tmux/plugins" ] || mkdir -pv "${HOME}/.tmux/plugins"
     git clone "https://github.com/tmux-plugins/tpm" "${HOME}/.tmux/plugins/tpm"
 }
-
+dotfiles="$(dirname "$(realpath "$0")")"
 # defaults
-if_exists_bak "$HOME/.bashrc" && ln -sv "$HOME/.dotfiles/bashrc" "$HOME/.bashrc"
-if_exists_bak "$HOME/.bash_functions" && ln -sv "$HOME/.dotfiles/bash_functions" "$HOME/.bash_functions"
-if_exists_bak "$HOME/.bash_aliases" && ln -sv "$HOME/.dotfiles/bash_aliases" "$HOME/.bash_aliases"
+if_exists_bak "$HOME/.bashrc" && ln -sv "$dotfiles/bashrc" "$HOME/.bashrc"
+if_exists_bak "$HOME/.bash_functions" && ln -sv "$dotfiles/bash_functions" "$HOME/.bash_functions"
+if_exists_bak "$HOME/.bash_aliases" && ln -sv "$dotfiles/bash_aliases" "$HOME/.bash_aliases"
 
 # keybindings (use vi mode rather than emacs)
-if_exists_bak "$HOME/.inputrc" && ln -sv "$HOME/.dotfiles/inputrc" "$HOME/.inputrc"
+if_exists_bak "$HOME/.inputrc" && ln -sv "$dotfiles/inputrc" "$HOME/.inputrc"
 
 # extras
-if_exists_bak "$HOME/.tmux.conf" && ln -sv "$HOME/.dotfiles/tmux.conf" "$HOME/.tmux.conf"
-if_exists_bak "$HOME/.fzf.bash" && ln -sv "$HOME/.dotfiles/fzf.bash" "$HOME/.fzf.bash"
+if_exists_bak "$HOME/.tmux.conf" && ln -sv "$dotfiles/tmux.conf" "$HOME/.tmux.conf"
+if_exists_bak "$HOME/.fzf.bash" && ln -sv "$dotfiles/fzf.bash" "$HOME/.fzf.bash"
 
 check_user_input "fzf - fuzzy file finder" "install_fzf"
 check_user_input "fzf-git.sh" "install_fzf_git"
