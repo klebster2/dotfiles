@@ -110,9 +110,9 @@ if ! shopt -oq posix; then
 fi
 
 # >>> custom functions >>>
-if [ -f "$HOME/.bash_functions" ]; then
-    source "$HOME/.bash_functions"
-fi
+for file in $(ls -1 "$HOME/.bash_functions"); do
+    source "$HOME/.bash_functions/$file"
+done
 # <<< custom functions <<<
 
 # >>> alias definitions >>>
@@ -122,8 +122,8 @@ fi
 # <<< alias definitions <<<
 
 # >>> conda initialize >>>
-# try to use first path found below root, with maxdepth 2 to find miniconda
-# this is because miniconda could be in a larger storage position
+# Attempt finding the first path found below root, with maxdepth=2 by default.
+# Because miniconda could be in a larger storage position (but is usually close to root).
 miniconda="$(find / -mindepth 1 -maxdepth 2 -iname "${USER}" -type d 2>/dev/null \
     -exec find {} -iname "miniconda*" -type d -maxdepth 1 \; | head -n1)"
 __conda_setup="$("$miniconda/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
@@ -149,13 +149,15 @@ if type rg &> /dev/null; then
 fi
 # <<< ripgrep init <<<
 
+# >>> env files >>>
 [ -f "$HOME/.env-vars" ] && "$HOME/.env-vars"
 [ -f "$HOME/.env" ] && "$HOME/.env"
 [ -f "$HOME/.dotfiles/variables.sh" ] && "$HOME/.dotfiles/variables.sh"
+# <<< env files <<<
 
 # remove duplicate PATHs for readability
 export PATH_NOT_UNIQ="$PATH"
-export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
+export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH_NOT_UNIQ}))')"
 
 [ -f "$HOME/.dotfiles/tmux.completion.bash" ] && source "$HOME/.dotfiles/tmux.completion.bash"
 
@@ -167,5 +169,5 @@ export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 [ -d ~/.fzf ] && [ -d ~/.fzf-git ] && . ~/.fzf-git/fzf-git.sh
 
-alias luamake=/home/kleber/.vim_runtime/nvim/lua-language-server/3rd/luamake/luamake
+alias luamake="$HOME/.vim_runtime/nvim/lua-language-server/3rd/luamake/luamake"
 export OPENAI_API_KEY=
