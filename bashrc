@@ -170,4 +170,4 @@ export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV
 [ -d ~/.fzf ] && [ -d ~/.fzf-git ] && . ~/.fzf-git/fzf-git.sh
 
 alias luamake="$HOME/.vim_runtime/nvim/lua-language-server/3rd/luamake/luamake"
-export OPENAI_API_KEY=
+#export OPENAI_API_KEY=
