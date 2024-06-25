@@ -59,7 +59,7 @@ alias sb='source $HOME/.bashrc'
 alias srp='ssh_repeat_localhost_port'
 
 # change directory
-alias cdv="cd $HOME/.config"
+alias cdv="cd $HOME/.config/nvim/"
 alias cdd="cd $HOME/.dotfiles"
 # source inputrc file
 alias si="bind -f $HOME/.inputrc"
