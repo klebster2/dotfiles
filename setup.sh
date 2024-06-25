@@ -27,13 +27,6 @@ if_exists_bak() {
     fi
 }
 
-install_vimrc() {
-    git clone "https://github.com/klebster2/myvimrc" ~/.vim_runtime
-    pushd ~/.vim_runtime
-    ./install_vimrc.sh
-    popd
-}
-
 install_tmux() {
     apt-get install tmux || sudo apt-get install tmux
 }

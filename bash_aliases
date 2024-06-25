@@ -38,9 +38,9 @@ alias eba="$EDITOR $HOME/.bash_aliases"
 alias aliases="cat $HOME/.bash_aliases|grep -P '^( *alias)'|sed 's/^ *//g'"
 alias ebf="$EDITOR $HOME/.bash_functions"
 alias et="$EDITOR $HOME/.tmux.conf"
-alias ev="$EDITOR $HOME/.vim_runtime/nvim/init.lua"
-alias ep="$EDITOR $HOME/.vim_runtime/nvim/lua/packer-startup.lua"
-alias evcmp="$EDITOR $HOME/.vim_runtime/nvim/lua/plugins/nvim-cmp-cfg.lua"
+alias ev="$EDITOR $HOME/.config/nvim/init.lua"
+alias ep="$EDITOR $HOME/.config/nvim/lua/packer-startup.lua"
+alias evcmp="$EDITOR $HOME/.config/nvim/lua/plugins/nvim-cmp-cfg.lua"
 # view bash history with timestamps
 alias ebh="edit_history $HOME/.bash_eternal_history | $EDITOR -"
 
@@ -59,7 +59,7 @@ alias sb='source $HOME/.bashrc'
 alias srp='ssh_repeat_localhost_port'
 
 # change directory
-alias cdv="cd $HOME/.vim_runtime"
+alias cdv="cd $HOME/.config"
 alias cdd="cd $HOME/.dotfiles"
 # source inputrc file
 alias si="bind -f $HOME/.inputrc"
