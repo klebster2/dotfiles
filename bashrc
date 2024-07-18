@@ -122,10 +122,15 @@ fi
 # <<< alias definitions <<<
 
 # >>> conda initialize >>>
+
 # Attempt finding the first path found below root, with maxdepth=2 by default.
 # Because miniconda could be in a larger storage position (but is usually close to root).
-miniconda="$(find / -mindepth 1 -maxdepth 2 -iname "${USER}" -type d 2>/dev/null \
-    -exec find {} -iname "miniconda*" -type d -maxdepth 1 \; | head -n1)"
+miniconda="$(find / -mindepth 1 -maxdepth 2 -iname "${USER}" -type d 2>/dev/null -exec find {} -iname "miniconda*" -type d -maxdepth 1 \; | head -n1)"
+if ! find / -mindepth 1 -maxdepth 2 -iname "${USER}" -type d 2>/dev/null -exec find {} -iname "miniconda*" -type d -maxdepth 1 \; ; then
+  # Option 2:
+    miniconda="$(find /mnt -mindepth 1 -maxdepth 2 -iname "miniconda*" -type d 2>/dev/null)"
+fi
+
 __conda_setup="$("$miniconda/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
@@ -171,3 +176,10 @@ export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV
 
 alias luamake="$HOME/.vim_runtime/nvim/lua-language-server/3rd/luamake/luamake"
 #export OPENAI_API_KEY=
+
+# fnm
+FNM_PATH="/home/k/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="$FNM_PATH:$PATH"
+  eval "`fnm env`"
+fi

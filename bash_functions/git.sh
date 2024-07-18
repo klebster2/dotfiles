@@ -1,10 +1,18 @@
 #!/bin/bash
 # >>> Functions without args - can possbily be used in bash pipeline >>>
+grinding_devs() {
+	winner_by_commit="$(git log | grep Author | uniq -c | sort -u | tail -n1)"
+	printf "Cool it,%s. You should consider working smarter, not harder.\n" "$(echo $winner_by_commit | cut -d ':' -f2)"
+	# TODO - add the count of commits for each author
+	printf "You currently have %scommits.\n" "$(echo $winner_by_commit | cut -d 'A' -f1)"
+}
 git_config_change_user_credentials() {
 	# Quite extraodinarily useful (all you have to do is type `guc' (see `bash_aliases')
 	# g - git, u - user, c - credentials
-	printf "Change name and email for current commit?\n"
-	for _option in user.name user.email; do
+	echo "Current winner by commit number:"
+	grinding_devs
+    printf "Change name and email for current commit?\n"
+    for _option in user.name user.email; do
 		printf "git config --get %s => " "${_option}"
 		git config --get "${_option}"
 		read -rp "Change ${_option} (y/n/q)? " y_n_q
@@ -19,7 +27,7 @@ git_config_change_user_credentials() {
 }
 git_switch_to_ssh_remote() {
 	remote_push="$(git remote -v | cut -d $'\t' -f2 | grep push | cut -d ' ' -f1)"
-	if echo "$remote_push" | grep -q ".git"; then
+	if echo "$remote_push" | grep -Pq "\.git"; then
 		echo "Error - it seems there is already a .git in the current remote URL:"
 		git remote  -v
 	else
