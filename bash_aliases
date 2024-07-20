@@ -53,6 +53,7 @@ alias sf='showfunc'
 
 # source bashrc
 alias sb='source $HOME/.bashrc'
+alias st='tmux source ~/.tmux.conf'
 
 # e.g. you can use something like
 # sudo ssh $(srp 8087 8088) -o ServerAliveInterval=30 user@localhost -i ~/.ssh/authorized_keys/key.ssh -p 2249
