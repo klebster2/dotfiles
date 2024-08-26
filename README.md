@@ -1,5 +1,14 @@
-# dotfiles
+# Usage notes
 
 klebster2's dotfiles
 
-to setup run `./setup.sh`
+To setup, clone:
+```bash
+git clone "https://github.com/klebster2/dotfiles" ~/.dotfiles
+```
+
+Then run:
+
+```bash
+pushd ~/.dotfiles && ./setup.sh && popd
+```
