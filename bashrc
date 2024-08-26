@@ -125,10 +125,12 @@ fi
 
 # Attempt finding the first path found below root, with maxdepth=2 by default.
 # Because miniconda could be in a larger storage position (but is usually close to root).
+
+# Option 1:
 miniconda="$(find / -mindepth 1 -maxdepth 2 -iname "${USER}" -type d 2>/dev/null -exec find {} -iname "miniconda*" -type d -maxdepth 1 \; | head -n1)"
 if ! find / -mindepth 1 -maxdepth 2 -iname "${USER}" -type d 2>/dev/null -exec find {} -iname "miniconda*" -type d -maxdepth 1 \; ; then
   # Option 2:
-    miniconda="$(find /mnt -mindepth 1 -maxdepth 2 -iname "miniconda*" -type d 2>/dev/null)"
+  miniconda="$(find /mnt -mindepth 1 -maxdepth 2 -iname "miniconda*" -type d 2>/dev/null)"
 fi
 
 __conda_setup="$("$miniconda/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
@@ -160,23 +162,6 @@ fi
 [ -f "$HOME/.dotfiles/variables.sh" ] && "$HOME/.dotfiles/variables.sh"
 # <<< env files <<<
 
-# remove duplicate PATHs for readability
-export PATH_NOT_UNIQ="$PATH"
-export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH_NOT_UNIQ}))')"
-
-[ -f "$HOME/.dotfiles/tmux.completion.bash" ] && source "$HOME/.dotfiles/tmux.completion.bash"
-
-# Some evil commands to add to your friend's bashrc
-# echo "Hi ᵔᴥᵔ"
-# sl
-# clear; trollface1 | lolcat; sleep 1; clear; trollface2 | lolcat; sleep 1; clear
-
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-[ -d ~/.fzf ] && [ -d ~/.fzf-git ] && . ~/.fzf-git/fzf-git.sh
-
-alias luamake="$HOME/.vim_runtime/nvim/lua-language-server/3rd/luamake/luamake"
-#export OPENAI_API_KEY=
-
 # fnm
 FNM_PATH="/home/k/.local/share/fnm"
 if [ -d "$FNM_PATH" ]; then
@@ -184,7 +169,25 @@ if [ -d "$FNM_PATH" ]; then
   eval "`fnm env`"
 fi
 
-# Connect to a new tmux session / screen
-if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
-  exec tmux new-session -A -s main /bin/bash
+if [ -d "/usr/local/bin/" ]; then
+  export PATH="/usr/local/bin/:$PATH"
 fi
+
+if [ -f "$HOME/.dotfiles/tmux.completion.bash" ]; then
+  source "$HOME/.dotfiles/tmux.completion.bash"
+fi
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+[ -d ~/.fzf ] && [ -d ~/.fzf-git ] && . ~/.fzf-git/fzf-git.sh
+
+# Connect to a new tmux session / screen
+
+#if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
+#  # If not inside a tmux session, and if no session is started, start a new one.
+#  if ! tmux list-sessions 2> /dev/null | grep -q main; then
+#    exec tmux new-session -A -s main /bin/bash
+#    # else if session is attached to another terminal, create a new tmux session
+#  elif tmux list-sessions 2> /dev/null | grep -q attached; then
+#    exec tmux new /bin/bash
+#  fi
+#fi
