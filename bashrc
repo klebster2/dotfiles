@@ -122,25 +122,15 @@ fi
 # <<< alias definitions <<<
 
 # >>> conda initialize >>>
-
-# Attempt finding the first path found below root, with maxdepth=2 by default.
-# Because miniconda could be in a larger storage position (but is usually close to root).
-
-# Option 1:
-miniconda="$(find / -mindepth 1 -maxdepth 2 -iname "${USER}" -type d 2>/dev/null -exec find {} -iname "miniconda*" -type d -maxdepth 1 \; | head -n1)"
-if ! find / -mindepth 1 -maxdepth 2 -iname "${USER}" -type d 2>/dev/null -exec find {} -iname "miniconda*" -type d -maxdepth 1 \; ; then
-  # Option 2:
-  miniconda="$(find /mnt -mindepth 1 -maxdepth 2 -iname "miniconda*" -type d 2>/dev/null)"
-fi
-
-__conda_setup="$("$miniconda/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/kleber/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "$miniconda/etc/profile.d/conda.sh" ]; then
-        . "$miniconda/etc/profile.d/conda.sh"
+    if [ -f "/home/kleber/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/kleber/miniconda3/etc/profile.d/conda.sh"
     else
-        export PATH="$miniconda/bin:$PATH"
+        export PATH="/home/kleber/miniconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -180,7 +170,7 @@ fi
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 [ -d ~/.fzf ] && [ -d ~/.fzf-git ] && . ~/.fzf-git/fzf-git.sh
 
-# Connect to a new tmux session / screen
+# Automatically create a new / or join a previous tmux session with every new terminal
 
 #if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
 #  # If not inside a tmux session, and if no session is started, start a new one.

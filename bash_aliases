@@ -26,6 +26,7 @@ alias fwh="find_windows_home"
 
 # Useful command to switch user email / password between
 alias guc="git_config_change_user_credentials"
+alias gss="git_switch_to_ssh_remote"
 
 # to use when finding all function names
 # TODO: make this recursive with maxdepth
@@ -34,8 +35,10 @@ alias bff="findbashfunctions $HOME/.bash_functions"
 # edit configuration file
 alias ei="$EDITOR $HOME/.inputrc"
 alias eb="$EDITOR $HOME/.bashrc"
+# check this file
 alias eba="$EDITOR $HOME/.bash_aliases"
 alias aliases="cat $HOME/.bash_aliases|grep -P '^( *alias)'|sed 's/^ *//g'"
+# check bash functions directory
 alias ebf="$EDITOR $HOME/.bash_functions"
 alias et="$EDITOR $HOME/.tmux.conf"
 alias ev="$EDITOR $HOME/.config/nvim/init.lua"
