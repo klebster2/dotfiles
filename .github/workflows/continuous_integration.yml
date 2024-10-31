@@ -82,7 +82,7 @@ jobs:
       run: |
         # Non-interactive mode for CI
         export CI=true
-        ./install.sh
+        ./setup.sh all
 
     - name: Verify dotfile symlinks
       run: |
