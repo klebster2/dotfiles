@@ -38,9 +38,28 @@ jobs:
     - name: Setup Gentoo
       if: matrix.container == 'gentoo/stage3'
       run: |
+        # Configure news reading to avoid warnings
+        mkdir -p /etc/portage/profile
+        echo "news_pkg_install_unread = ignore" >> /etc/portage/make.conf
+        
+        # Update portage and sync repository
         emerge-webrsync
-        emerge --quiet-build=y dev-vcs/git app-shells/bash dev-util/make sys-devel/gcc net-misc/curl
-
+        
+        # Update system tools first
+        emerge --quiet-build=y sys-apps/portage
+        
+        # Install required packages with correct Gentoo names
+        emerge --quiet-build=y \
+          dev-vcs/git \
+          app-shells/bash \
+          sys-devel/make \
+          sys-devel/gcc \
+          net-misc/curl \
+          app-misc/tmux
+          
+        # Create necessary directories
+        mkdir -p /var/db/repos/gentoo
+        
     # Common setup for Ubuntu
     - name: Install system dependencies (Ubuntu)
       if: "!matrix.container"
