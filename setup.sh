@@ -38,11 +38,13 @@ install_tmux_completion() {
 }
 
 install_fzf() {
+    # TODO add as a submodule
     git clone --depth 1 "https://github.com/junegunn/fzf.git" "$HOME/.fzf"
     "$HOME/.fzf/install"
 }
 
 install_fzf_git() {
+    # TODO add as a submodule
     git clone --depth 1 "https://github.com/junegunn/fzf-git.sh" "$HOME/.fzf-git"
 }
 
@@ -51,6 +53,17 @@ install_chtsh() {
     mkdir -p "$PATH_DIR"
     curl "https://cht.sh/:cht.sh" > "$PATH_DIR/cht.sh"
     chmod +x "$PATH_DIR/cht.sh"
+}
+
+install_nvimconfig() {
+    for tool in "jq -V" "curl -V" "unzip -v"; do
+        if ! $tool 2> /dev/null ; then
+            printf '%s is needed for this neovim setup. Please install before continuing' "$(echo "$tool" | cut -d " " -f1)" && exit -1
+        fi
+    done
+    # TODO: implement this fully using
+
+
 }
 
 check_user_input() {
@@ -67,13 +80,13 @@ check_user_input() {
 }
 
 install_tpm() {
+    # TODO add as a submodule
     [ -d "${HOME}/.tmux/plugins" ] || mkdir -pv "${HOME}/.tmux/plugins"
     git clone "https://github.com/tmux-plugins/tpm" "${HOME}/.tmux/plugins/tpm"
 }
 
-if
-
-if [["${BASH_SOURCE[0]}" == "${0}" ]]; then
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    # If this is being used as a script
     dotfiles="$(dirname "$(realpath "$0")")"
 
     # defaults
@@ -93,9 +106,20 @@ if [["${BASH_SOURCE[0]}" == "${0}" ]]; then
     # curl
     if_exists_bak "$HOME/.curlrc" && ln -sv "$dotfiles/curlrc" "$HOME/.curlrc"
 
-    check_user_input "fzf - fuzzy file finder" "install_fzf"
-    check_user_input "fzf-git.sh" "install_fzf_git"
-    check_user_input "tmux completer" "install_tmux_completion"
-    check_user_input "tpm - tmux plugin manager" "install_tpm"
-    check_user_input "chtsh - cheat sheet" "install_chtsh"
+    # Installations
+    if [[ "$1" == "all" ]]; then
+        install_fzf
+        install_fzf_git
+        install_tmux_completion
+        install_tpm
+        install_chtsh
+        #install_nvim_config
+    else
+        check_user_input "fzf - fuzzy file finder" "install_fzf"
+        check_user_input "fzf-git.sh" "install_fzf_git"
+        check_user_input "tmux completer" "install_tmux_completion"
+        check_user_input "tpm - tmux plugin manager" "install_tpm"
+        check_user_input "chtsh - cheat sheet" "install_chtsh"
+        #check_user_input "nvim configuration - klebster2" "install_nvimconfig"
+    fi
 fi
