@@ -99,7 +99,7 @@ jobs:
         tmux -V
         ~/.fzf/bin/fzf --version
         ~/.local/bin/cht.sh --help
-        bash -c "source ~/.fzf.bash && declare -F | grep -q fzf"
+        source ~/.fzf.bash && declare -F | grep -q fzf
 
     - name: Check dotfile contents
       run: |
