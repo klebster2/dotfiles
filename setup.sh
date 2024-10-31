@@ -70,21 +70,32 @@ install_tpm() {
     [ -d "${HOME}/.tmux/plugins" ] || mkdir -pv "${HOME}/.tmux/plugins"
     git clone "https://github.com/tmux-plugins/tpm" "${HOME}/.tmux/plugins/tpm"
 }
-dotfiles="$(dirname "$(realpath "$0")")"
-# defaults
-if_exists_bak "$HOME/.bashrc" && ln -sv "$dotfiles/bashrc" "$HOME/.bashrc"
-if_exists_bak "$HOME/.bash_functions" && ln -sv "$dotfiles/bash_functions" "$HOME/.bash_functions"
-if_exists_bak "$HOME/.bash_aliases" && ln -sv "$dotfiles/bash_aliases" "$HOME/.bash_aliases"
 
-# keybindings (use vi mode rather than emacs)
-if_exists_bak "$HOME/.inputrc" && ln -sv "$dotfiles/inputrc" "$HOME/.inputrc"
+if
 
-# extras
-if_exists_bak "$HOME/.tmux.conf" && ln -sv "$dotfiles/tmux.conf" "$HOME/.tmux.conf"
-if_exists_bak "$HOME/.fzf.bash" && ln -sv "$dotfiles/fzf.bash" "$HOME/.fzf.bash"
+if [["${BASH_SOURCE[0]}" == "${0}" ]]; then
+    dotfiles="$(dirname "$(realpath "$0")")"
 
-check_user_input "fzf - fuzzy file finder" "install_fzf"
-check_user_input "fzf-git.sh" "install_fzf_git"
-check_user_input "tmux completer" "install_tmux_completion"
-check_user_input "tpm - tmux plugin manager" "install_tpm"
-check_user_input "chtsh - cheat sheet" "install_chtsh"
+    # defaults
+    if_exists_bak "$HOME/.bashrc" && ln -sv "$dotfiles/bashrc" "$HOME/.bashrc"
+    if_exists_bak "$HOME/.bash_functions" && ln -sv "$dotfiles/bash_functions" "$HOME/.bash_functions"
+    if_exists_bak "$HOME/.bash_aliases" && ln -sv "$dotfiles/bash_aliases" "$HOME/.bash_aliases"
+
+    # keybindings (use vi mode rather than emacs)
+    if_exists_bak "$HOME/.inputrc" && ln -sv "$dotfiles/inputrc" "$HOME/.inputrc"
+
+    # extras
+    if_exists_bak "$HOME/.tmux.conf" && ln -sv "$dotfiles/tmux.conf" "$HOME/.tmux.conf"
+
+    # fzf
+    if_exists_bak "$HOME/.fzf.bash" && ln -sv "$dotfiles/fzf.bash" "$HOME/.fzf.bash"
+
+    # curl
+    if_exists_bak "$HOME/.curlrc" && ln -sv "$dotfiles/curlrc" "$HOME/.curlrc"
+
+    check_user_input "fzf - fuzzy file finder" "install_fzf"
+    check_user_input "fzf-git.sh" "install_fzf_git"
+    check_user_input "tmux completer" "install_tmux_completion"
+    check_user_input "tpm - tmux plugin manager" "install_tpm"
+    check_user_input "chtsh - cheat sheet" "install_chtsh"
+fi
