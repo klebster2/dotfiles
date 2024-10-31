@@ -38,28 +38,46 @@ jobs:
     - name: Setup Gentoo
       if: matrix.container == 'gentoo/stage3'
       run: |
-        # Configure news reading to avoid warnings
-        mkdir -p /etc/portage/profile
+        # Configure make.conf
+        echo 'MAKEOPTS="-j$(nproc)"' >> /etc/portage/make.conf
         echo "news_pkg_install_unread = ignore" >> /etc/portage/make.conf
         
-        # Update portage and sync repository
-        emerge-webrsync
-        
-        # Update system tools first
-        emerge --quiet-build=y sys-apps/portage
-        
-        # Install required packages with correct Gentoo names
-        emerge --quiet-build=y \
-          dev-vcs/git \
-          app-shells/bash \
-          sys-devel/make \
-          sys-devel/gcc \
-          net-misc/curl \
-          app-misc/tmux
-          
         # Create necessary directories
+        mkdir -p /etc/portage/profile
         mkdir -p /var/db/repos/gentoo
         
+        # Setup kernel sources
+        emerge-webrsync
+        
+        # Install sys-kernel/gentoo-sources first
+        emerge --quiet-build=y sys-kernel/gentoo-sources
+        
+        # Create symbolic link for kernel sources
+        ln -s /usr/src/linux-* /usr/src/linux
+        
+        # Update portage
+        emerge --quiet-build=y sys-apps/portage
+        
+        # Install basic build tools first
+        emerge --quiet-build=y \
+          sys-devel/gnumake \
+          sys-devel/gcc \
+          dev-vcs/git \
+          app-shells/bash
+        
+        # Install additional tools
+        emerge --quiet-build=y \
+          net-misc/curl \
+          app-misc/tmux
+        
+        # Verify installations
+        gcc --version
+        make --version
+        git --version
+        bash --version
+        curl --version
+        tmux -V
+
     # Common setup for Ubuntu
     - name: Install system dependencies (Ubuntu)
       if: "!matrix.container"
