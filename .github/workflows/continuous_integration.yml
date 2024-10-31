@@ -1,0 +1,110 @@
+name: Dotfiles CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          tmux \
+          curl \
+          git \
+          make \
+          gcc
+
+    - name: Install Bats
+      run: |
+        git clone https://github.com/bats-core/bats-core.git
+        cd bats-core
+        sudo ./install.sh /usr/local
+        cd ..
+        # Install Bats support libraries
+        git clone https://github.com/bats-core/bats-support.git test/test_helper/bats-support
+        git clone https://github.com/bats-core/bats-assert.git test/test_helper/bats-assert
+
+    - name: Install fzf
+      run: |
+        git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+        ~/.fzf/install --all
+
+    - name: Install TPM (Tmux Plugin Manager)
+      run: |
+        git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+    - name: Install cht.sh
+      run: |
+        mkdir -p ~/.local/bin
+        curl https://cht.sh/:cht.sh > ~/.local/bin/cht.sh
+        chmod +x ~/.local/bin/cht.sh
+
+    - name: Download tmux completion
+      run: |
+        mkdir -p ~/.dotfiles
+        curl -o ~/.dotfiles/tmux.completion.bash \
+          "https://raw.githubusercontent.com/Bash-it/bash-it/master/completion/available/tmux.completion.bash"
+
+    - name: Install fzf-git
+      run: |
+        git clone --depth 1 https://github.com/junegunn/fzf-git.sh ~/.fzf-git
+
+    - name: Verify file structure
+      run: |
+        ls -la ~/.fzf
+        ls -la ~/.tmux/plugins/tpm
+        ls -la ~/.local/bin/cht.sh
+        ls -la ~/.dotfiles/tmux.completion.bash
+        ls -la ~/.fzf-git
+
+    - name: Run Bats tests
+      run: |
+        # Create test directories if they don't exist
+        mkdir -p test/test_helper
+        
+        # Load bats helpers in test files
+        echo 'load "test_helper/bats-support/load"' > test/test_helper.bash
+        echo 'load "test_helper/bats-assert/load"' >> test/test_helper.bash
+        
+        # Run tests
+        bats test/
+
+    - name: Run installation script
+      run: |
+        # Non-interactive mode for CI
+        export CI=true
+        ./install.sh
+
+    - name: Verify dotfile symlinks
+      run: |
+        test -L ~/.bashrc
+        test -L ~/.bash_functions
+        test -L ~/.bash_aliases
+        test -L ~/.inputrc
+        test -L ~/.tmux.conf
+        test -L ~/.fzf.bash
+        test -L ~/.curlrc
+
+    - name: Test installed commands
+      run: |
+        tmux -V
+        ~/.fzf/bin/fzf --version
+        ~/.local/bin/cht.sh --help
+        bash -c "source ~/.fzf.bash && declare -F | grep -q fzf"
+
+    - name: Check dotfile contents
+      run: |
+        for file in ~/.bashrc ~/.bash_functions ~/.bash_aliases ~/.inputrc ~/.tmux.conf ~/.fzf.bash ~/.curlrc; do
+          echo "Checking $file..."
+          readlink -f "$file"
+          test -f "$(readlink -f "$file")"
+        done
