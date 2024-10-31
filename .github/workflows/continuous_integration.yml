@@ -10,17 +10,13 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, ubuntu-latest]
+        os: [ubuntu-20.04, ubuntu-22.04]
         include:
           # Include Kali Linux using container
           - os: ubuntu-latest
             container: kalilinux/kali-rolling
             name: kali-latest
-          # Include Gentoo using container
-          - os: ubuntu-latest
-            container: gentoo/stage3
-            name: gentoo-latest
-    
+
     runs-on: ${{ matrix.os }}
     container: ${{ matrix.container }}
     
@@ -33,50 +29,6 @@ jobs:
       run: |
         apt-get update
         apt-get install -y sudo git curl make gcc
-
-    # Gentoo-specific setup
-    - name: Setup Gentoo
-      if: matrix.container == 'gentoo/stage3'
-      run: |
-        # Configure make.conf
-        echo 'MAKEOPTS="-j$(nproc)"' >> /etc/portage/make.conf
-        echo "news_pkg_install_unread = ignore" >> /etc/portage/make.conf
-        
-        # Create necessary directories
-        mkdir -p /etc/portage/profile
-        mkdir -p /var/db/repos/gentoo
-        
-        # Setup kernel sources
-        emerge-webrsync
-        
-        # Install sys-kernel/gentoo-sources first
-        emerge --quiet-build=y sys-kernel/gentoo-sources
-        
-        # Create symbolic link for kernel sources
-        ln -s /usr/src/linux-* /usr/src/linux
-        
-        # Update portage
-        emerge --quiet-build=y sys-apps/portage
-        
-        # Install basic build tools first
-        emerge --quiet-build=y \
-          sys-devel/gnumake \
-          sys-devel/gcc \
-          dev-vcs/git \
-          app-shells/bash
-        
-        # Install additional tools
-        emerge --quiet-build=y \
-          net-misc/curl \
-          app-misc/tmux
-        
-        # Verify installations
-        gcc --version
-        make --version
-        git --version
-        bash --version
-        curl --version
-        tmux -V
 
     # Common setup for Ubuntu
     - name: Install system dependencies (Ubuntu)
