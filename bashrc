@@ -122,15 +122,18 @@ fi
 # <<< alias definitions <<<
 
 # >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/kleber/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+# Attempt finding first path found below root, with maxdepth=2 by default.
+# Miniconda could be in a larger storage position (but it is usually kept close to root).
+miniconda="$(find / -mindepth 1 -maxdepth 2 -iname "${USER}" -type d 2>/dev/null \
+    -exec find {} -iname "miniconda*" -type d -maxdepth 1 \; | head -n1)"
+__conda_setup="$("$miniconda/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/kleber/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/kleber/miniconda3/etc/profile.d/conda.sh"
+    if [ -f "$miniconda/etc/profile.d/conda.sh" ]; then
+        . "$miniconda/etc/profile.d/conda.sh"
     else
-        export PATH="/home/kleber/miniconda3/bin:$PATH"
+        export PATH="$miniconda/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -166,18 +169,9 @@ fi
 if [ -f "$HOME/.dotfiles/tmux.completion.bash" ]; then
   source "$HOME/.dotfiles/tmux.completion.bash"
 fi
+if [ -f "$HOME/.dotfiles/conda.completion.bash" ]; then
+  source "$HOME/.dotfiles/conda.completion.bash"
+fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 [ -d ~/.fzf ] && [ -d ~/.fzf-git ] && . ~/.fzf-git/fzf-git.sh
-
-# Automatically create a new / or join a previous tmux session with every new terminal
-
-#if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
-#  # If not inside a tmux session, and if no session is started, start a new one.
-#  if ! tmux list-sessions 2> /dev/null | grep -q main; then
-#    exec tmux new-session -A -s main /bin/bash
-#    # else if session is attached to another terminal, create a new tmux session
-#  elif tmux list-sessions 2> /dev/null | grep -q attached; then
-#    exec tmux new /bin/bash
-#  fi
-#fi

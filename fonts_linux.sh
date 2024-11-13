@@ -11,7 +11,6 @@ declare -a fonts=(
     Hermit
     JetBrainsMono
     Meslo
-    #Noto
     Overpass
     ProggyClean
     RobotoMono
@@ -36,5 +35,5 @@ for font in "${fonts[@]}"; do
     [ -d "$fonts_dir/$font" ] && rm -r "$fonts_dir/$font" && unzip "$zip_file" -d "$fonts_dir" -N && rm "$zip_file";
 done
 
+echo "Deleting Windows Compatible fonts - they are not needed for Linux"
 find "$fonts_dir" -name '*Windows Compatible*' -delete
-

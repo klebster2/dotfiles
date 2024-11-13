@@ -28,11 +28,11 @@ if_exists_bak() {
 }
 
 install_tmux() {
-    apt-get install tmux || sudo apt-get install tmux
+    apt-get install tmux >/dev/null || sudo apt-get install tmux
 }
 
 install_tmux_completion() {
-    tmux -V &>/dev/null || check_user_input "tmux" "install_tmux"
+    tmux -V >/dev/null || check_user_input "tmux" "install_tmux"
     curl -o $HOME/.dotfiles/tmux.completion.bash \
         "https://raw.githubusercontent.com/Bash-it/bash-it/master/completion/available/tmux.completion.bash"
 }
@@ -48,22 +48,14 @@ install_fzf_git() {
     git clone --depth 1 "https://github.com/junegunn/fzf-git.sh" "$HOME/.fzf-git"
 }
 
-install_chtsh() {
-    PATH_DIR="$HOME/.local/bin"  # or another directory on your $PATH
-    mkdir -p "$PATH_DIR"
-    curl "https://cht.sh/:cht.sh" > "$PATH_DIR/cht.sh"
-    chmod +x "$PATH_DIR/cht.sh"
-}
-
 install_nvimconfig() {
     for tool in "jq -V" "curl -V" "unzip -v"; do
-        if ! $tool 2> /dev/null ; then
+        if ! $tool > /dev/null ; then
             printf '%s is needed for this neovim setup. Please install before continuing' "$(echo "$tool" | cut -d " " -f1)" && exit -1
         fi
     done
-    # TODO: implement this fully using
-
-
+    # TODO:
+    #git submodule update
 }
 
 check_user_input() {
@@ -106,20 +98,21 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     # curl
     if_exists_bak "$HOME/.curlrc" && ln -sv "$dotfiles/curlrc" "$HOME/.curlrc"
 
+    # gitconfig
+    if_exists_bak "$HOME/.gitconfig" && ln -sv "$dotfiles/gitconfig" "$HOME/.gitconfig"
+
     # Installations
     if [[ "$1" == "all" ]]; then
         install_fzf
         install_fzf_git
         install_tmux_completion
         install_tpm
-        install_chtsh
-        #install_nvim_config
+        install_nvim_config
     else
         check_user_input "fzf - fuzzy file finder" "install_fzf"
         check_user_input "fzf-git.sh" "install_fzf_git"
         check_user_input "tmux completer" "install_tmux_completion"
         check_user_input "tpm - tmux plugin manager" "install_tpm"
-        check_user_input "chtsh - cheat sheet" "install_chtsh"
-        #check_user_input "nvim configuration - klebster2" "install_nvimconfig"
+        check_user_input "nvim configuration - klebster2" "install_nvimconfig"
     fi
 fi
