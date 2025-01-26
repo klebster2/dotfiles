@@ -70,7 +70,18 @@ install_tpm() {
     [ -d "${HOME}/.tmux/plugins" ] || mkdir -pv "${HOME}/.tmux/plugins"
     git clone "https://github.com/tmux-plugins/tpm" "${HOME}/.tmux/plugins/tpm"
 }
+install_tmux_gitbar() {
+    git clone "https://github.com/arl/tmux-gitbar.git" "$HOME/.tmux-gitbar"
+}
+install_llama_cpp() {
+    git clone "https://github.com/ggerganov/llama.cpp" "$HOME/.llama.cpp"
+    pushd "$HOME/.llama.cpp"
+    cmake -S . -B build -DLLAMA_CURL=ON
+    nohup curl -Lo "qwen2.5-coder-1.5b-q8_0.gguf" "https://huggingface.co/ggml-org/Qwen2.5-Coder-1.5B-Q8_0-GGUF/resolve/main/qwen2.5-coder-1.5b-q8_0.gguf"
+    #./build/bin/llama-server --ctx-size 2048 --model qwen2.5-coder-1.5b-q8_0.gguf --port 8012
+}
 dotfiles="$(dirname "$(realpath "$0")")"
+
 # defaults
 if_exists_bak "$HOME/.bashrc" && ln -sv "$dotfiles/bashrc" "$HOME/.bashrc"
 if_exists_bak "$HOME/.bash_functions" && ln -sv "$dotfiles/bash_functions" "$HOME/.bash_functions"
@@ -88,3 +99,4 @@ check_user_input "fzf-git.sh" "install_fzf_git"
 check_user_input "tmux completer" "install_tmux_completion"
 check_user_input "tpm - tmux plugin manager" "install_tpm"
 check_user_input "chtsh - cheat sheet" "install_chtsh"
+check_user_input "tmux-gitbar" "install_tmux_gitbar"
