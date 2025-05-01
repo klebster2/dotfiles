@@ -107,7 +107,7 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
         install_fzf_git
         install_tmux_completion
         install_tpm
-        install_nvim_config
+        install_nvimconfig
     else
         check_user_input "fzf - fuzzy file finder" "install_fzf"
         check_user_input "fzf-git.sh" "install_fzf_git"
