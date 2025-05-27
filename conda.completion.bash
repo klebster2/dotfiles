@@ -35,4 +35,4 @@ _conda_env_completion() {
 }
 
 # Register the completion function on the criterion of the conda command being present
-which conda && complete -F _conda_env_completion conda
+which conda >/dev/null && complete -F _conda_env_completion conda

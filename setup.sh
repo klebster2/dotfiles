@@ -41,16 +41,7 @@ install_tmux_completion() {
         "https://raw.githubusercontent.com/Bash-it/bash-it/master/completion/available/tmux.completion.bash"
 }
 
-install_fzf() {
-    # TODO add as a submodule
-    git clone --depth 1 "https://github.com/junegunn/fzf.git" "$HOME/.fzf"
-    "$HOME/.fzf/install"
-}
 
-install_fzf_git() {
-    # TODO add as a submodule
-    git clone --depth 1 "https://github.com/junegunn/fzf-git.sh" "$HOME/.fzf-git"
-}
 
 install_nvimconfig() {
     for tool in "jq -V" "curl -V" "unzip -v"; do
@@ -83,40 +74,25 @@ install_tpm() {
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     # If this is being used as a script
-    dotfiles="$(dirname "$(realpath "$0")")"
+    DOTFILES="$(dirname "$(realpath "$0")")"
 
-    # defaults
-    if_exists_bak "$HOME/.bashrc" && ln -sv "$dotfiles/bashrc" "$HOME/.bashrc"
-    if_exists_bak "$HOME/.bash_functions" && ln -sv "$dotfiles/bash_functions" "$HOME/.bash_functions"
-    if_exists_bak "$HOME/.bash_aliases" && ln -sv "$dotfiles/bash_aliases" "$HOME/.bash_aliases"
-
-    # keybindings (use vi mode rather than emacs)
-    if_exists_bak "$HOME/.inputrc" && ln -sv "$dotfiles/inputrc" "$HOME/.inputrc"
-
-    # extras
-    if_exists_bak "$HOME/.tmux.conf" && ln -sv "$dotfiles/tmux.conf" "$HOME/.tmux.conf"
-
-    # fzf
-    if_exists_bak "$HOME/.fzf.bash" && ln -sv "$dotfiles/fzf.bash" "$HOME/.fzf.bash"
-
-    # curl
-    if_exists_bak "$HOME/.curlrc" && ln -sv "$dotfiles/curlrc" "$HOME/.curlrc"
-
-    # gitconfig
-    if_exists_bak "$HOME/.gitconfig" && ln -sv "$dotfiles/gitconfig" "$HOME/.gitconfig"
+    if_exists_bak "$HOME/.bashrc" && ln -sv "$DOTFILES/bashrc" "$HOME/.bashrc"
+    if_exists_bak "$HOME/.bash_functions" && ln -sv "$DOTFILES/bash_functions" "$HOME/.bash_functions"
+    if_exists_bak "$HOME/.bash_aliases" && ln -sv "$DOTFILES/bash_aliases" "$HOME/.bash_aliases"
+    if_exists_bak "$HOME/.inputrc" && ln -sv "$DOTFILES/inputrc" "$HOME/.inputrc"
+    if_exists_bak "$HOME/.tmux.conf" && ln -sv "$DOTFILES/tmux.conf" "$HOME/.tmux.conf"
+    if_exists_bak "$HOME/.fzf.bash" && ln -sv "$DOTFILES/fzf.bash" "$HOME/.fzf.bash"
+    if_exists_bak "$HOME/.curlrc" && ln -sv "$DOTFILES/curlrc" "$HOME/.curlrc"
+    if_exists_bak "$HOME/.gitconfig" && ln -sv "$DOTFILES/gitconfig" "$HOME/.gitconfig"
 
     # Installations
-    if [[ "$1" == "all" ]]; then
-        install_fzf
-        install_fzf_git
-        install_tmux_completion
-        install_tpm
-        install_nvimconfig
-    else
-        check_user_input "fzf - fuzzy file finder" "install_fzf"
-        check_user_input "fzf-git.sh" "install_fzf_git"
-        check_user_input "tpm - tmux plugin manager" "install_tpm"
-        check_user_input "tmux completer" "install_tmux_completion"
-        check_user_input "nvim configuration - klebster2" "install_nvimconfig"
+    if [ -d "$DOTFILES/fzf" ]; then
+        "$HOME/.fzf/install"
     fi
+    if [ -d $DOTFILES/fzf-git.sh ]; then
+        [ -d "$HOME/.fzf-git" ] || ln -s "$DOTFILES/fzf-git.sh/" "$HOME/.fzf-git"
+    fi
+    install_tmux_completion
+    install_tpm
+    install_nvimconfig
 fi
