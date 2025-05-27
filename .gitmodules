@@ -4,3 +4,6 @@
 [submodule "fzf"]
 	path = fzf
 	url = https://github.com/junegunn/fzf.git
+[submodule "vimrc"]
+	path = vimrc
+	url = https://github.com/klebster2/vimrc.git
