@@ -3,8 +3,9 @@
 klebster2's dotfiles
 
 To setup, clone:
+
 ```bash
-git clone "https://github.com/klebster2/dotfiles" ~/.dotfiles
+git clone --recurse-submodules "https://github.com/klebster2/dotfiles" ~/.dotfiles
 ```
 
 Then run:
