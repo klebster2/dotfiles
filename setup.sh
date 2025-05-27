@@ -28,7 +28,11 @@ if_exists_bak() {
 }
 
 install_tmux() {
-    apt-get install tmux >/dev/null || sudo apt-get install tmux
+    if uname | grep -q Darwin; then
+        brew install tmux
+    else
+        apt-get install tmux
+    fi
 }
 
 install_tmux_completion() {
@@ -111,8 +115,8 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     else
         check_user_input "fzf - fuzzy file finder" "install_fzf"
         check_user_input "fzf-git.sh" "install_fzf_git"
-        check_user_input "tmux completer" "install_tmux_completion"
         check_user_input "tpm - tmux plugin manager" "install_tpm"
+        check_user_input "tmux completer" "install_tmux_completion"
         check_user_input "nvim configuration - klebster2" "install_nvimconfig"
     fi
 fi

@@ -5,13 +5,8 @@ _conda_env_completion() {
     local cur=${COMP_WORDS[COMP_CWORD]}
     local cmd=${COMP_WORDS[1]}
 
-    #if [[ ${COMP_WORDS[0]} != "conda" || ${COMP_WORDS[0]} != "mamba" ]]; then
-    #    return
-    #fi
-
-    # Only complete for 'conda activate' command
     if [[ $cmd == "" ]]; then
-        local opts=$(conda --help | grep -P "^ *COMMAND" -A100 | tail -n+2 | cut -d ' ' -f5 | grep -v '^$')
+        local opts=$(conda --help | grep " COMMAND" -A100 | tail -n+2 | cut -d ' ' -f5 | grep -v '^$')
         COMPREPLY=($(compgen -W "$opts" -- "$cur"))
     elif [[ $cmd == "activate" ]]; then
         # Get list of environments, excluding base environment
@@ -34,10 +29,10 @@ _conda_env_completion() {
             if grep -Pqv "^ *$line" <<< "$cmd"; then
                 opts="$opts $line"
             fi
-        done< <(conda --help | grep -P "^ *COMMAND" -A1000 | tail -n+2 | cut -d ' ' -f5 | grep -v '^$')
+        done< <(conda --help | grep " COMMAND" -A1000 | tail -n+2 | cut -d ' ' -f5 | grep -v '^$')
         COMPREPLY=($(compgen -W "$opts" -- "$cur"))
     fi
 }
 
-# Register the completion function
-complete -F _conda_env_completion conda
+# Register the completion function on the criterion of the conda command being present
+which conda && complete -F _conda_env_completion conda

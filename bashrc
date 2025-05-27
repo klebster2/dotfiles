@@ -175,3 +175,5 @@ fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 [ -d ~/.fzf ] && [ -d ~/.fzf-git ] && . ~/.fzf-git/fzf-git.sh
+
+which kubectl && alias k=kubectl

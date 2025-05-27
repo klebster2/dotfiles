@@ -27,7 +27,7 @@ git_config_change_user_credentials() {
 }
 git_switch_to_ssh_remote() {
 	remote_push="$(git remote -v | cut -d $'\t' -f2 | grep push | cut -d ' ' -f1)"
-	if echo "$remote_push" | grep -Pq "\.git"; then
+	if echo "$remote_push" | grep -q ".git$"; then
 		echo "Error - it seems there is already a .git in the current remote URL:"
 		git remote  -v
 	else
