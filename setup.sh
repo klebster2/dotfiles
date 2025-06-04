@@ -11,8 +11,9 @@ if_exists_bak() {
             count=1
             while true; do
                 if [[ ! -f "${1}.${count}.bak" ]]; then
-                    mv "${1}.${count}"{,.bak}
+                    mv "${1}.${count}" "${1}.${count}.bak"
                     ((count++))
+                    break 1
                 fi
             done
         fi
