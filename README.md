@@ -13,3 +13,12 @@ Then run:
 ```bash
 pushd ~/.dotfiles && ./setup.sh && popd
 ```
+
+# MacOS
+Setting up from scratch.
+
+zsh may be the default shell. In case you prefer bash, use:
+
+```bash
+chsh -s /bin/bash
+```
