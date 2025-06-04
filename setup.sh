@@ -131,9 +131,6 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     if [ -d "$DOTFILES/fzf" ]; then
         "$DOTFILES/fzf/install"
     fi
-    if [ -d $DOTFILES/fzf-git.sh ]; then
-        [ -d "$HOME/.fzf-git" ] || ln -s "$DOTFILES/fzf-git.sh/" "$HOME/.fzf-git"
-    fi
     install_tmux_completion
     install_tpm
     install_nvimconfig
