@@ -7,7 +7,7 @@ if_exists_bak() {
             # do not overwrite current bak
             mv "${1}"{,.bak}
         else
-            # write a new bak suffix if more baks exist
+            # write a new bak suffix if more backups already exist
             count=1
             while true; do
                 if [[ ! -f "${1}.${count}.bak" ]]; then
