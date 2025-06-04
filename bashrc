@@ -172,6 +172,9 @@ fi
 if [ -f "$HOME/.dotfiles/conda.completion.bash" ]; then
   source "$HOME/.dotfiles/conda.completion.bash"
 fi
+if [ -d $DOTFILES/fzf-git.sh ]; then
+  source "$DOTFILES/fzf-git.sh/fzf-git.sh"
+fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 [ -d ~/.fzf ] && [ -d ~/.fzf-git ] && . ~/.fzf-git/fzf-git.sh
