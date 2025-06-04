@@ -128,7 +128,7 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
 
     # Installations
     if [ -d "$DOTFILES/fzf" ]; then
-        "$HOME/.fzf/install"
+        "$HOME/fzf/install"
     fi
     if [ -d $DOTFILES/fzf-git.sh ]; then
         [ -d "$HOME/.fzf-git" ] || ln -s "$DOTFILES/fzf-git.sh/" "$HOME/.fzf-git"
