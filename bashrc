@@ -169,14 +169,12 @@ fi
 if [ -f "$HOME/.dotfiles/tmux.completion.bash" ]; then
   source "$HOME/.dotfiles/tmux.completion.bash"
 fi
+
 if [ -f "$HOME/.dotfiles/conda.completion.bash" ]; then
   source "$HOME/.dotfiles/conda.completion.bash"
 fi
-if [ -d $DOTFILES/fzf-git.sh ]; then
-  source "$DOTFILES/fzf-git.sh/fzf-git.sh"
-fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-[ -d ~/.fzf ] && [ -d ~/.fzf-git ] && . ~/.fzf-git/fzf-git.sh
+[ -d ~/.fzf ] && [ -d $HOME/.dotfiles/fzf-git.sh ] && source "$HOME/.dotfiles/fzf-git.sh/fzf-git.sh"
 
 which kubectl >/dev/null && alias k=kubectl
