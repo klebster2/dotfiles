@@ -36,8 +36,11 @@ PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 # activate colors
 export TERM=xterm-256color
 
-export EDITOR="nvim"
-export VISUAL="nvim"
+if which nvim >/dev/null; then
+    export EDITOR="nvim" && export VISUAL="nvim"
+elif which vim >/dev/null; then
+    export EDITOR="vim" && export VISUAL="vim"
+fi
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -65,7 +68,7 @@ esac
 # uncomment for a colored prompt, if the terminal has the capability; turned
 # off by default to not distract the user: the focus in a terminal window
 # should be on the output of commands, not on the prompt
-#force_color_prompt=yes
+force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
@@ -78,8 +81,12 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-if [ "$color_prompt" = yes ]; then
+if [ "$color_prompt" = yes ] && uname -a | grep Debian >/dev/null ; then
     PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+elif [ "$color_prompt" = yes ] && uname -a | grep Darwin >/dev/null ; then
+    PS1='\[\e]0;\u@\h: \w\a\]\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    TERM=xterm-color
+    GREP_OPTIONS='--color=auto' GREP_COLOR='1;32'
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi

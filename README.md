@@ -22,3 +22,4 @@ zsh may be the default shell. In case you prefer bash, use:
 ```bash
 chsh -s /bin/bash
 ```
+Install [homebrew](https://brew.sh)

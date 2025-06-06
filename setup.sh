@@ -2,9 +2,9 @@
 
 if_exists_bak() {
     if [[ ! -L "${1}" && -f "${1}" ]]; then
-        # backup: case dotfile at location already exists
+        # Backup: In case where dotfile at location already exists
         if [[ ! -f "${1}.bak" ]]; then
-            # do not overwrite current bak
+            # Do not overwrite current bak
             mv "${1}"{,.bak}
         else
             # write a new bak suffix if more backups already exist
@@ -28,28 +28,13 @@ if_exists_bak() {
     fi
 }
 
-install_tmux() {
-    if uname | grep -q Darwin; then
-        brew install tmux
-    else
-        apt-get install tmux
-    fi
-}
 
 install_tmux_completion() {
-    tmux -V > /dev/null 2>&1 || check_user_input "tmux" "install_tmux"
+    tmux -V > /dev/null 2>&1 || exit 1
     curl -o $HOME/.dotfiles/tmux.completion.bash \
         "https://raw.githubusercontent.com/Bash-it/bash-it/master/completion/available/tmux.completion.bash"
 }
 
-
-install_nvimconfig() {
-    for tool in "jq -V" "curl -V" "unzip -v"; do
-        if ! $tool > /dev/null 2>&1 ; then
-            printf '%s is needed for this neovim setup. Please install before continuing' "$(echo "$tool" | cut -d " " -f1)" && exit -1
-        fi
-    done
-}
 
 check_decision() {
     local _human_readable_message="$1" _command="$2"
@@ -108,39 +93,46 @@ create_pynvim_conda_env() {
     export CONDA_PYNVIM_ENV_PYTHON_PATH="$environment_location/bin/python3"
 }
 
+
 install_tpm() {
-    # TODO add as a submodule
     [ -d "${HOME}/.tmux/plugins" ] || mkdir -pv "${HOME}/.tmux/plugins"
     git clone "https://github.com/tmux-plugins/tpm" "${HOME}/.tmux/plugins/tpm"
 }
 
+
+install_gruvbox() {
+    curl -Lo "Gruvbox.itermcolors" "https://raw.githubusercontent.com/runxel/gruvbox-iterm/84ca3c759ab9b9f2a2ede9a32446adb37f3761b6/Gruvbox.itermcolors"
+}
+
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    # If this is being used as a script
+    # If this is being used as a script (e.g. `$ ./setup.sh`)
     DOTFILES="$(dirname "$(realpath "$0")")"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-    if_exists_bak "$HOME/.bashrc" && ln -sv "$DOTFILES/bashrc" "$HOME/.bashrc"
-    if_exists_bak "$HOME/.bash_functions" && ln -sv "$DOTFILES/bash_functions" "$HOME/.bash_functions"
-    if_exists_bak "$HOME/.bash_aliases" && ln -sv "$DOTFILES/bash_aliases" "$HOME/.bash_aliases"
-    if_exists_bak "$HOME/.inputrc" && ln -sv "$DOTFILES/inputrc" "$HOME/.inputrc"
-    if_exists_bak "$HOME/.tmux.conf" && ln -sv "$DOTFILES/tmux.conf" "$HOME/.tmux.conf"
-    if_exists_bak "$HOME/.fzf.bash" && ln -sv "$DOTFILES/fzf.bash" "$HOME/.fzf.bash"
-    if_exists_bak "$HOME/.curlrc" && ln -sv "$DOTFILES/curlrc" "$HOME/.curlrc"
-    if_exists_bak "$HOME/.gitconfig" && ln -sv "$DOTFILES/gitconfig" "$HOME/.gitconfig"
+    export PATH="$HOME/homebrew/bin:$PATH"
 
-    # Installations
-    if [ -d "$DOTFILES/fzf" ]; then
-        "$DOTFILES/fzf/install"
-    fi
+    brew bundle && echo '[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"' >> "${HOME}/.bash_profile"
+
+    for dotfile in bashrc bash_functions bash_aliases inputrc tmux.conf fzf.bash curlrc gitconfig hushlogin; do
+        if_exists_bak "$HOME/.${dotfile}" && ln -sv "$DOTFILES/${dotfile}" "$HOME/.${dotfile}"
+    done
+
     install_tmux_completion
-    install_tpm
-    install_nvimconfig
+    install_gruvbox
+
     if ! (which conda > /dev/null 2>&1); then
         prompt_to_install_conda
-        echo "Please rerun the installation script after first running . ${HOME}/.bashrc to see if the base conda env is activated"
+        echo "Please rerun the installation script after running\n. ${HOME}/.bashrc to ensure the base conda env is activated"
         rm ./Miniconda*.sh && exit 1
     else
-        echo "* Conda installation found"
-        #environment_location="$(find / -mindepth 1 -maxdepth 3 -type d -iname "miniconda*" 2>/dev/null | head -n1)"
+	echo "* Skipping miniconda installation. A conda installation was found at $(realpath $(which conda))"
     fi
-    ln -s "$DOTFILES/vimrc" "$HOME/.config.nvim"
+    if ! (which ollama > /dev/null 2>&1); then
+        # Install Ollama
+        curl -fsSL https://ollama.com/install.sh | sh
+    fi
+    if [ -d $DOTFILES/vimrc ] && [ ! -d $DOTFILES/.config/nvim ]; then
+        # Symlink neovim config submodule (at ~/.dotfiles/.gitmodules )
+        ln -s "$DOTFILES/vimrc" "$HOME/.config/nvim"
+    fi
 fi

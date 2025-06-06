@@ -5,3 +5,12 @@
     branch = auto
     interactive = auto
     grep = auto
+
+[alias]
+co = checkout
+br = branch
+ci = commit
+
+# TODO: Add specific commands
+# prefer ff
+# git diff show lines delta
