@@ -2,3 +2,4 @@ Miniconda3-latest-*.sh
 *.out
 fzf.bash
 *.completion.bash
+Gruvbox.itermcolors
