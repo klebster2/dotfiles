@@ -135,4 +135,5 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
         # Symlink neovim config submodule (at ~/.dotfiles/.gitmodules )
         ln -s "$DOTFILES/vimrc" "$HOME/.config/nvim"
     fi
+    echo "Tip: Go to https://www.nerdfonts.com/font-downloads and download a nerdfont with glyphs for neovim"
 fi

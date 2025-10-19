@@ -40,6 +40,8 @@ if which nvim >/dev/null; then
     export EDITOR="nvim" && export VISUAL="nvim"
 elif which vim >/dev/null; then
     export EDITOR="vim" && export VISUAL="vim"
+elif which nano >/dev/null; then
+    export EDITOR="nano" && export VISUAL="nano"
 fi
 
 # check the window size after each command and, if necessary,
@@ -81,22 +83,22 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-if [ "$color_prompt" = yes ] && uname -a | grep Debian >/dev/null ; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+if [ "$color_prompt" = yes ] && uname -a | grep -q "Debian\|Ubuntu" >/dev/null ; then
+  PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 elif [ "$color_prompt" = yes ] && uname -a | grep Darwin >/dev/null ; then
-    PS1='\[\e]0;\u@\h: \w\a\]\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-    TERM=xterm-color
-    GREP_OPTIONS='--color=auto' GREP_COLOR='1;32'
+  PS1='\[\e]0;\u@\h: \w\a\]\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+  TERM=xterm-color
 else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+  PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
+GREP_OPTIONS='--color=auto' GREP_COLOR='1;32'
 
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    #PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
     ;;
 *)
     ;;
@@ -173,12 +175,24 @@ if [ -d "/usr/local/bin/" ]; then
   export PATH="/usr/local/bin/:$PATH"
 fi
 
+if [ -d "/home/linuxbrew/.linuxbrew/bin" ]; then
+  export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+fi
+
 if [ -f "$HOME/.dotfiles/tmux.completion.bash" ]; then
   source "$HOME/.dotfiles/tmux.completion.bash"
 fi
 
 if [ -f "$HOME/.dotfiles/conda.completion.bash" ]; then
   source "$HOME/.dotfiles/conda.completion.bash"
+fi
+
+if [ -f "$HOME/.dotfiles/fzf/shell/key-bindings.bash" ]; then
+  source "$HOME/.dotfiles/fzf/shell/key-bindings.bash"
+fi
+
+if [ -f "$HOME/.dotfiles/fzf/shell/completion.bash" ]; then
+  source "$HOME/.dotfiles/fzf/shell/completion.bash"
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
