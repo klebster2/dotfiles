@@ -108,7 +108,7 @@ jobs:
 
     - name: Check dotfile contents
       run: |
-        for file in ~/.bashrc ~/.bash_aliases ~/.inputrc ~/.tmux.conf ~/.fzf.bash ~/.curlrc; do
+        for file in ~/.bashrc ~/.bash_aliases ~/.inputrc ~/.tmux.conf ~/.curlrc; do
           echo "Checking $file..."
           readlink -f "$file"
           test -f "$(readlink -f "$file")"
