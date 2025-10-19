@@ -113,7 +113,7 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
 
     brew bundle && echo '[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"' >> "${HOME}/.bash_profile"
 
-    for dotfile in bashrc bash_functions bash_aliases inputrc tmux.conf fzf.bash curlrc gitconfig hushlogin; do
+    for dotfile in bashrc bash_functions bash_aliases inputrc tmux.conf curlrc gitconfig hushlogin; do
         if_exists_bak "$HOME/.${dotfile}" && ln -sv "$DOTFILES/${dotfile}" "$HOME/.${dotfile}"
     done
 
